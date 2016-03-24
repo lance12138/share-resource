@@ -1,0 +1,12 @@
+@charset "utf-8";
+/* 测试结果*/
+
+.content{ background:#f3f3f3; height:auto; padding-bottom:50px;}
+.content .pointdisplay{ font-size:24px; font-family:"微软雅黑"; color:#333; width:980px; height:100px; line-height:100px; text-align:center;  }
+.content .pointdisplay strong{ color:red;}
+.content .tips{color:red;font-size:18px; font-family:"微软雅黑"; width:980px; height:30px;line-height:30px; padding:0 20px; }
+.content .errorquestion{color:#333;font-size:14px; font-family:"微软雅黑"; width:980px; padding:20px 20px;}
+.content .errorquestion li{width:960px; padding:20px 0;}
+.content .errorquestion li p{line-height:20px; }
+.content .errorquestion li .errortips{ color:red; font-family:Verdana; padding:5px 0;}
+

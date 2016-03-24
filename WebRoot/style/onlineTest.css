@@ -1,0 +1,17 @@
+@charset "utf-8";
+/* CSS Document */
+.content{ background:#FFF; height:auto; padding-bottom:150px; position:relative;}
+.content  h1{width:980px; height:30px; font-family:"微软雅黑"; font-size:16px; color:#FFF; background:#01c675; text-align:center; line-height:30px;}
+.questionbox{width:860px; padding:20px 60px;}
+.questionbox li{width:860px; padding-top:20px;}
+
+.questionbox li p{ line-height:20px;font-family:"微软雅黑"; font-size:14px; color:#666;}
+.questionbox li .radiobox{ margin-top:5px;}
+.questionbox li input[type="radio"]{}
+.questionbox li label{ height:20px; line-height:20px;font-family:"微软雅黑";font-size:14px; margin-right:50px;padding-left: 20px;
+  cursor: pointer;}
+ 
+
+.toolbar{position:absolute; bottom:0; width:980px; height:38px; background:#f3f3f3; margin:0 auto; line-height:35px; }
+#testsubmit{position:absolute; top:5px; left:450px; width:100px; height:30px; line-height:30px;background:#01c675; color:#fff;font-size:14px; font-family:"微软雅黑" ; cursor:pointer;border-bottom:3px solid #009e5d; border-right:3px solid #009e5d;}
+#testsubmit:hover{ border:none;}

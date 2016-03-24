@@ -1,0 +1,124 @@
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%@ taglib prefix="s" uri="/struts-tags"%>
+<%
+	String path = request.getContextPath();
+	String basePath = request.getScheme() + "://"
+			+ request.getServerName() + ":" + request.getServerPort()
+			+ path + "/";
+%>
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+ <base href="<%=basePath%>">
+	<meta charset="UTF-8">		
+	<title>实训详情</title>
+		<link type="text/css" rel="stylesheet"
+			href="style/pagecommen.css" />
+	
+		<script type="text/javascript" src="js/common.js"></script>
+		<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+		
+		
+<style>
+	.content{height:auto; background-color:#fff;padding-bottom:40px;}
+	.detail-body{width:100%;background-color:#fff; padding-top:20px;}
+	.detail-body h2{width:100%;height:30px; padding-top:18px; text-align:center;font-size:16px;font-family:"微软雅黑"}
+	.detail-body h3{width:95%;height:20px;font-size:13px; text-align:right; color:#999; font-weight:normal;}
+	.main-text{width:80%;margin:0 auto;font-size: 14px;background: white;font-family:"微软雅黑";padding-bottom:20px;}
+	.main-text p{line-height:1.5em;}
+	.detail-body .vedio-link{margin:0 auto;margin-bottom:20px;text-align:center;font-size:14px;font-family:"微软雅黑"; display:block;color:#fff;background-color:#01c675;width:150px;height:26px; padding-top:4px;border:1px solid #ccc;}
+	.detail-body .vedio-link:hover{border:1px solid orange;}
+	
+        
+</style>
+
+</head>
+	<body>
+		<header id="header"><img id="logo" src="images/logo_white.png" alt="logo" width="340" height="90" /></header>
+
+		<nav id="nav">
+		 <a href="index.jsp">平台主页</a>
+		 <a href="courseAction_enterCourse?courseid=${courseid}">课程简介</a>
+   		 <a href="teachTeamAction_addUI?courseid=${courseid}">师资队伍</a>
+   		 <a href="programAction_list?courseid=${courseid}">实践项目</a>
+   		 <a href="homeworkUploadAction_addTeacherList">作业提交</a>
+  		 <a href="forumAction_list">在线互动</a>
+		</nav>
+		<div class="content">
+			<h1>实训详情</h1>
+			<div class="detail-body">
+				<h2>${pro_detail.pro_title}</h2>
+				<h3>上传时间： ${pro_detail.pro_time}</h3>
+				<div class="main-text">
+					<p>
+						${pro_detail.pro_content}
+					</p>
+				</div>
+				<a class="vedio-link" href="javascript:openVideo('programAction_programVideo?program.pro_id=${pro_detail.pro_id}','实训视频',780,550);" >点击查看实训视频 </a>
+			</div>
+		</div>
+		
+		<footer>
+	<div class="footer_link">
+    	<a href="javascript:void(0);" onclick="AddFavorite(window.location,document.title)">加入收藏</a><a href="backLogin.jsp">进入后台</a>
+    
+    <script>
+    	//  
+	
+		function AddFavorite(sURL, sTitle)
+		{
+		
+		    try
+		    {
+		        window.external.addFavorite(sURL, sTitle);
+		    }
+		    catch (e)
+		    {
+		        try
+		        {
+		            window.sidebar.addPanel(sTitle, sURL, "");
+		        }
+		        catch (e)
+		        {
+		            alert("加入收藏失败，请使用Ctrl+D进行添加");
+		        }
+		    }
+		}
+    
+    </script>
+    </div>
+	<p>
+    	Copyright© 2015 江西理工大学.All Rights Reserved.<br />
+  		学校地址：江西省赣州市红旗大道86号 邮编：341000<br />
+  		制作维护：  江西理工大学信息学院Delta工作室  工作群：85669528 <br />
+
+
+    </p>
+</footer>
+<script>
+	$(function(){
+			//查看视频点击
+	        var more = $(".vedio-link");
+	        var moreList = $(".more-list");
+	        var back = $(".back");
+	        more.click(function(){
+	       
+	            moreList.css({"display":"block"});
+	        });
+	
+	        back.click(function(){
+	
+	            moreList.css({"display":"none"});//点击返回移除卡片
+	
+	         });
+		
+	});
+	function openVideo(uri,name,iWidth,iHeight){
+	  var iTop = (window.screen.height-30-iHeight)/2; //获得窗口的垂直位置;  
+		var iLeft = (window.screen.width-10-iWidth)/2; //获得窗口的水平位置;  
+ window.open(uri,name,'height='+iHeight+',,innerHeight='+iHeight+',width='+iWidth+',innerWidth='+iWidth+',top='+iTop+',left='+iLeft+', toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no');
+	}
+</script>
+	</body>
+</html>

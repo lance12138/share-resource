@@ -1,0 +1,210 @@
+package com.jxust.action;
+
+import java.util.Date;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+
+import com.jxust.util.PageToolBar;
+import com.jxust.bean.News;
+import com.jxust.service.NewsService;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.ModelDriven;
+
+
+@SuppressWarnings("serial")
+@Controller
+@Scope("prototype")
+public class NewsAction extends ActionSupport implements ModelDriven<News>{
+    
+	
+	private News news=new News();
+	
+	private News news1=new News();
+	public News getNews1() {
+		return news1;
+	}
+
+	public void setNews1(News news1) {
+		this.news1 = news1;
+	}
+	@Resource
+	private NewsService newsService;
+	
+	private PageToolBar toolBar;
+	private int pageSize = 5;
+	private int currentPage = 1;
+	Long newsid;
+	String announce;
+	int login;
+	public int getLogin() {
+		return login;
+	}
+
+	public void setLogin(int login) {
+		this.login = login;
+	}
+
+	public String getAnnounce() {
+		return announce;
+	}
+
+	public void setAnnounce(String announce) {
+		this.announce = announce;
+	}
+
+	public Long getNewsid() {
+		return newsid;
+	}
+
+	public void setNewsid(Long newsid) {
+		this.newsid = newsid;
+	}
+
+	public PageToolBar getToolBar() {
+		return toolBar;
+	}
+
+	public void setToolBar(PageToolBar toolBar) {
+		this.toolBar = toolBar;
+	}
+
+	public int getPageSize() {
+		return pageSize;
+	}
+
+	public void setPageSize(int pageSize) {
+		this.pageSize = pageSize;
+	}
+
+	public int getCurrentPage() {
+		return currentPage;
+	}
+
+	public void setCurrentPage(int currentPage) {
+		this.currentPage = currentPage;
+	}
+	public News getModel() {
+		// TODO Auto-generated method stub
+		return news;
+	}
+	
+	public News getNews() {
+		return news;
+	}
+
+	public void setNews(News news) {
+		this.news = news;
+	}
+   /*
+    新闻保存
+     */
+	public String save()throws Exception{
+		news.setCreateTime(new Date());
+		newsService.save(news);
+		return "tosave";
+	}
+	//分页
+	public String list()throws Exception{
+		if(news==null){
+			
+			News news=new News();
+		}
+		
+		String hql=newsService.getHQL(news);
+		int newsCount=newsService.getCountByHQL(hql);
+		if(getToolBar() == null){
+			setToolBar(new PageToolBar(newsCount,pageSize));
+		}else{
+			getToolBar().setResultsetCount(newsCount);
+			getToolBar().setPageSize(pageSize);
+			}
+		List newsList=newsService.getListForPage(hql, toolBar.getStartRow(), toolBar.getEndRow());
+		ActionContext.getContext().put("newsList", newsList);
+		
+		return "tolist";
+	}
+	//页面公告
+	public String indexList()throws Exception{
+    if(news==null){
+			
+			News news=new News();
+		}
+		
+		String hql=newsService.getHQL(news);
+		int newsCount=newsService.getCountByHQL(hql);
+		if(getToolBar() == null){
+			setToolBar(new PageToolBar(newsCount,pageSize));
+		}else{
+			getToolBar().setResultsetCount(newsCount);
+			getToolBar().setPageSize(pageSize);
+			}
+		List newsList=newsService.getListForPage("from News order by createTime desc", toolBar.getStartRow(), toolBar.getEndRow());
+		ActionContext.getContext().put("newsList", newsList);
+		if(login!=0){
+		if(login==1){
+			ActionContext.getContext().put("Sessionerror","你已登录，请勿重复登录！");
+		}else{
+			ActionContext.getContext().put("Sessionerror","用户名或密码错误！");
+		}
+		}
+		ActionContext.getContext().getSession().put("announce", announce);
+		return "toindexList";
+	}
+	
+	//编辑新闻
+	public String edit()throws Exception{
+		if(newsid==null){
+			news=newsService.getById(news.getId());
+			List nextNews= newsService.nextPage(news);
+			List previousNews=newsService.previousPage(news);
+			ActionContext.getContext().put("nextNews", nextNews);
+			ActionContext.getContext().put("previousNews", previousNews);
+			return "newsDetail";
+		}else{
+		news=newsService.getById(newsid);
+		return "toedit";}
+		
+	}
+	//删除新闻
+	public String delete()throws Exception{
+		newsService.delete(newsid);
+		return "todelete";
+	}
+	/**
+	 * 批次删除
+	 * @return
+	 * @throws Exception
+	 */
+	public String newsbatchDelete()throws Exception{
+		int size=newsService.getAllSize();
+		if(size<=0){
+			return "deleteError";
+		}else{
+			newsService.batchDelete();
+		}
+		
+		return"todelete";
+	}
+	//进入修改新闻界面
+	public String update()throws Exception{
+		
+		 news=newsService.getById(newsid);
+		 ActionContext.getContext().getSession().put("news", news);
+		return "toupdate";
+	}
+   //执行修改
+	public String executeUpdate()throws Exception{
+		
+	   news1= (News) ActionContext.getContext().getSession().get("news");
+	   news.setId(news1.getId());
+		newsService.update(news);
+		return "toexecute";
+	}
+	
+
+}

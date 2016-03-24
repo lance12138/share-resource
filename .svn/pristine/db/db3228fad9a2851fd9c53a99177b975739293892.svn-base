@@ -1,0 +1,21 @@
+package com.jxust.service;
+
+import java.util.List;
+
+import com.jxust.bean.Activity;
+
+public interface ActivityService {
+
+	public List<Activity> findAll();
+
+	public void save(Activity activity);
+
+	public void delete(Long acId);
+
+	public Activity findById(Long acId);
+
+	public Activity previousPage(Activity ac);
+
+	public Activity nextPage(Activity ac);
+
+}

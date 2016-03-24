@@ -1,0 +1,441 @@
+package com.jxust.action;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.util.Date;
+import java.util.List;
+
+import org.apache.struts2.ServletActionContext;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+
+
+import com.jxust.bean.Course;
+
+
+import com.jxust.bean.Resource;
+import com.jxust.bean.Video;
+
+import com.jxust.service.CourseService;
+import com.jxust.service.DownloadResourceService;
+
+import com.jxust.service.ResourceService;
+import com.jxust.service.VideoService;
+import com.jxust.util.PageToolBar;
+import com.jxust.util.Tools;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.ModelDriven;
+
+
+@Controller
+@Scope("prototype")
+public class ResourceAction extends ActionSupport implements ModelDriven<Resource> {
+
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private Resource resource[];
+	private Resource resource1;
+	private String courseName;
+	private Long cid;
+	public Long getCid() {
+		return cid;
+	}
+	public void setCid(Long cid) {
+		this.cid = cid;
+	}
+	public String getCourseName() {
+		return courseName;
+	}
+	public void setCourseName(String courseName) {
+		this.courseName = courseName;
+	}
+
+	Video video=new Video();
+	public Video getVideo() {
+		return video;
+	}
+	public void setVideo(Video video) {
+		this.video = video;
+	}
+
+	Video videos=new Video();
+	public Video getVideos() {
+		return videos;
+	}
+	public void setVideos(Video videos) {
+		this.videos = videos;
+	}
+	public Resource getResource1() {
+		return resource1;
+	}
+	public void setResource1(Resource resource1) {
+		this.resource1 = resource1;
+	}
+	public Resource[] getResource() {
+		return resource;
+	}
+	public void setResource(Resource[] resource) {
+		this.resource = resource;
+	}
+	@javax.annotation.Resource
+	private ResourceService resourceService;
+	@javax.annotation.Resource
+	private CourseService courseService;
+	@javax.annotation.Resource
+	private VideoService videoService;
+	
+	private File[] exercise;
+	public File[] getExercise() {
+		return exercise;
+	}
+	public void setExercise(File[] exercise) {
+		this.exercise = exercise;
+	}
+	public String[] getExerciseFileName() {
+		return exerciseFileName;
+	}
+	public void setExerciseFileName(String[] exerciseFileName) {
+		this.exerciseFileName = exerciseFileName;
+	}
+	public String[] getExerciseContentType() {
+		return exerciseContentType;
+	}
+	public void setExerciseContentType(String[] exerciseContentType) {
+		this.exerciseContentType = exerciseContentType;
+	}
+	private String[] exerciseFileName;
+	private String[] exerciseContentType;
+	private PageToolBar toolBar;
+	private int pageSize = 8;
+	
+	
+	Long videoId;
+	Long id;
+	Long courseid;
+	int grade;
+	private String downloadSelect;
+	public String getDownloadSelect() {
+		return downloadSelect;
+	}
+	public void setDownloadSelect(String downloadSelect) {
+		this.downloadSelect = downloadSelect;
+	}
+	public int getGrade() {
+		return grade;
+	}
+	public void setGrade(int grade) {
+		this.grade = grade;
+	}
+	public Long getCourseid() {
+		return courseid;
+	}
+	public void setCourseid(Long courseid) {
+		this.courseid = courseid;
+	}
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	private int type;
+	public int getType() {
+		return type;
+	}
+	public void setType(int type) {
+		this.type = type;
+	}
+	public void setVideoId(Long videoId) {
+		this.videoId = videoId;
+	}
+
+	public PageToolBar getToolBar() {
+		return toolBar;
+	}
+	public void setToolBar(PageToolBar toolBar) {
+		this.toolBar = toolBar;
+	}
+	public int getPageSize() {
+		return pageSize;
+	}
+	public void setPageSize(int pageSize) {
+		this.pageSize = pageSize;
+	}
+	public int getCurrentPage() {
+		return currentPage;
+	}
+	public void setCurrentPage(int currentPage) {
+		this.currentPage = currentPage;
+	}
+	private int currentPage = 1;
+	
+	
+	public Resource getModel() {
+		// TODO Auto-generated method stub
+		return resource1;
+	}
+	//分页
+	public String resourceManage()throws Exception{
+		if(resource1==null){
+             resource1=new Resource();
+		}
+		String hql=resourceService.getHQL(resource1,downloadSelect);
+		int resourceCount=resourceService.getCountByHQL(hql,type);
+		if(getToolBar()==null){
+			setToolBar(new PageToolBar(resourceCount,pageSize));
+		}else{
+			getToolBar().setResultsetCount(resourceCount);
+			getToolBar().setPageSize(pageSize);
+		}
+		List resourceList=resourceService.getListForPage(hql, toolBar.getStartRow(), toolBar.getEndRow(),type);
+			ActionContext.getContext().put("resourceList", resourceList);
+			ActionContext.getContext().put("type", type);
+			modelList();
+			
+		return "toresourceManage";
+	}
+	/**
+	 * 批量删除
+	 * @return
+	 */
+	public String resoucebatchDelete(){
+	
+		 int size=resourceService.findSizeByGrade(type,cid);
+		   if(size<=0){
+			   ActionContext.getContext().put("type", type);
+			   return "deleteError";
+		   }else{
+			   resourceService.batchDelete(type,cid);
+			   ActionContext.getContext().put("type", type);
+		   }
+		   return"todelete";
+	}
+	
+	/*
+	 * 视频管理
+	 * */
+	public String videoManage()throws Exception{
+		if(videos==null){
+			
+			videos=new Video();
+		}
+		String hql=videoService.getHQL(videos,cid);
+		int videoCount=videoService.getCountByHQL(hql);
+		if(getToolBar()==null){
+			setToolBar(new PageToolBar(videoCount,pageSize));
+		}else{
+			getToolBar().setResultsetCount(videoCount);
+			getToolBar().setPageSize(pageSize);
+		}
+		List videoList=videoService.getListForPage(hql, toolBar.getStartRow(), toolBar.getEndRow());
+		ActionContext.getContext().put("videoList", videoList);
+		modelList();
+		return "tovideoManage";
+	}
+	public String videobatchDelete(){
+		 int size=videoService.getSize(cid);
+		   if(size<=0){
+			   return "videodeleteError";
+		   }else{
+			   videoService.batchDelete(cid);
+		   }
+		   return"tovideodelete";
+	}
+	public void modelList()throws Exception{
+		 List CourseList=courseService.findAll();
+		  ActionContext.getContext().put("CourseList", CourseList);
+	}
+	//进入习题上传
+	public String list()throws Exception{
+		modelList();
+		return "tolist";
+	}
+    //进入试题上传
+	public String examList()throws Exception{
+		modelList();
+		return "toexamList";
+	}
+	//进入案例上传
+	public String caseList()throws Exception{
+		modelList();
+		return "tocaseList";
+	}
+	//进入实验上传
+	public String experimentList()throws Exception{
+		modelList();
+		return "toexperimentList";
+	}
+	  //查看习题
+	  public String resourceEdit()throws Exception{
+	
+		  resource1=resourceService.findById(id);
+		  if(resource1.getExercises()==null||resource1.getExercises().isEmpty()){
+			  ActionContext.getContext().put("downloadErrors", "未上传文件，请联系管理员");
+			  return "resourceError";
+		  }else{
+			  ActionContext.getContext().put("title", resource1.getExercises());
+		  return "resourceEdit";
+	  }
+	  }
+	  /*
+		 * 前台进入习题库，试题库，实验指导，案例学习
+		 * */
+		public String courseResource(){
+			 List<com.jxust.bean.Resource> reList=resourceService.finByIdAndGrade(courseid,grade);
+			 
+			 ActionContext.getContext().put("grade", grade);
+			 ActionContext.getContext().put("count", reList.size());
+			 ActionContext.getContext().put("reList", reList);
+			return "toCourseResource";
+		}
+   //习题上传
+   public String addExercises()throws Exception{
+	 resource=new Resource[20];
+	  Course course=null;
+	 // int Count=0;
+	  course= courseService.findBytitle(resource1.getTitle());
+	   
+	  /* try{
+	// Count=  resourceService.getCountByHQL("from Resource where 1=1");
+	   }catch(Exception e){
+		   
+		   Count=0;
+	   }*/
+	if(exercise==null){
+		ActionContext.getContext().put("resourceUpError", "请先上传习题再提交！！");
+		modelList();
+			return "toResourceError";
+		
+	}
+	   try{
+			int i;
+			FileInputStream is=null;
+			FileOutputStream fost=null;
+			for(i = 0;i < exercise.length;i++){
+				
+					 is =  new FileInputStream(exercise[i]);
+					
+					//String root = ServletActionContext.getServletContext().getRealPath("/upload");//得到当前目录下的upload目录的绝对路径
+					 fost = new FileOutputStream(ServletActionContext.getServletContext()
+							   .getRealPath("exercises/" + exerciseFileName[i]));
+						int length = 0;
+						byte[] buffer = new byte[1024];
+						while((length = is.read(buffer))!=-1){
+							fost.write(buffer, 0, length);
+						}
+
+			}
+			for (int j = 0; j < exercise.length; j++) {
+				
+				if(resource[j]==null){resource[j] = new Resource();}
+				
+				resource[j].setExercises(exerciseFileName[j]);
+			 
+				 resource[j].setTitle(exerciseFileName[j].substring(0,exerciseFileName[j].lastIndexOf(".")));
+				resource[j].setCourseId(course.getId());
+				resource[j].setGrade(type);
+				resource[j].setCourseName(course.getName());
+				resource[j].setUploadTime(new Date());
+				resourceService.save(resource[j]);
+			}
+			is.close();
+			fost.close();
+			
+		}catch(Exception e){
+		
+		ActionContext.getContext().put("resourceError", "试题上传失败，请重新上传！");
+		modelList();
+			return "toResourceError";
+		}
+		ActionContext.getContext().put("type",type);
+		
+	   return "toexercise";
+   }
+
+//视频上传、
+  
+   public String addVideo()throws Exception{
+	   Course course=null;
+	 if(resource1.getTitle().equals("0")){
+		 ActionContext.getContext().put("videoError", "请先选择课程再提交！");
+		 modelList();
+		 return "toVideoError";
+	 }
+	 if(exercise==null){
+		 
+		 ActionContext.getContext().put("videoUpError", "请先上传视频再提交！");
+		 modelList();
+		 return "toVideoError";
+	 }
+	 if(videos.getName().isEmpty()){
+		 
+		 ActionContext.getContext().put("videoNameError", "视频名称不可为空！");
+		 modelList();
+		 return "toVideoError";
+	 }
+	   course= courseService.findBytitle(resource1.getTitle());
+	   String rename=Tools.renameFileName(exerciseFileName[0]);
+	   try{
+		   int i;
+		   FileInputStream is=null;
+		   FileOutputStream fost=null;
+		   
+			   
+			   is =  new FileInputStream(exercise[0]);
+			   
+			   //String root = ServletActionContext.getServletContext().getRealPath("/upload");//得到当前目录下的upload目录的绝对路径
+			   fost = new FileOutputStream(ServletActionContext.getServletContext()
+					   .getRealPath("Video"+"\\"+rename));
+			   int length = 0;
+			   byte[] buffer = new byte[1024];
+			   while((length = is.read(buffer))!=-1){
+				   fost.write(buffer, 0, length);
+			   }
+			   
+		  
+		  
+			   
+			   if(video==null){video = new Video();}
+			   
+			   video.setTitle(rename);
+			   video.setChapter(videos.getChapter());
+			   video.setGrade(videos.getGrade());
+			   video.setName(videos.getName());
+			   video.setCourse(course);
+			   videoService.save(video);
+		  
+		   is.close();
+		   fost.close();
+		   
+	   }catch(Exception e){
+	
+		   ActionContext.getContext().put("videoError", "视频上传失败，请重新上传！");
+		   modelList();
+		   return "toVideoError";
+	   }
+	   return "toaddVideo";
+	   }
+ 
+   //删除习题
+   public String deleteresource()throws Exception{
+	   
+	   Resource resource=resourceService.findById(id);
+	   ActionContext.getContext().put("test",resource.getGrade());
+	   resourceService.delete(id);
+	 
+	   return "deleteresource";
+   }
+ 
+   //删除视频
+   public String deletevideo()throws Exception{
+	   videoService.delete(videoId);
+	   return "deletevideo";
+   }
+   
+}

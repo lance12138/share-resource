@@ -1,0 +1,95 @@
+package com.jxust.service.serviceImpl;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.jxust.bean.ACMuser;
+import com.jxust.bean.User;
+import com.jxust.dao.UserDao;
+import com.jxust.service.UserService;
+
+@Service
+@Transactional
+public class UserSerivceImpl implements UserService{
+
+	@Resource
+	 UserDao userDao;
+	public List findBygrade(int i) {
+		// TODO Auto-generated method stub
+		return userDao.findBygrade(i);
+	}
+	public boolean ajaxValidate(String card) {
+		// TODO Auto-generated method stub
+		return userDao.ajaxValidate(card);
+	}
+	public void save(ACMuser acmUser) {
+	  userDao.save(acmUser);
+		
+	}
+	public String getHQL(ACMuser acmUser) {
+		// TODO Auto-generated method stub
+		return userDao.getQueryHQL(acmUser);
+	}
+	public int findByHQL(String hql) {
+		// TODO Auto-generated method stub
+		return userDao.getCountByHQL(hql);
+	}
+	public List getListForPage(String hql, int startRow, int endRow) {
+		// TODO Auto-generated method stub
+		return userDao.getListForPage(hql, startRow, endRow);
+	}
+	public List findAll() {
+		// TODO Auto-generated method stub
+		return userDao.findAll();
+	}
+	public void delete(Long userId) {
+		// TODO Auto-generated method stub
+		userDao.delect(userId);
+	}
+	public void saveUser(User user) {
+		// TODO Auto-generated method stub
+		userDao.saveUser(user);
+	}
+	public User checkUser(String userName, String password,int i) {
+		// TODO Auto-generated method stub
+		return userDao.checkUser(userName, password,i);
+	}
+	public boolean ValidateUser(String email) {
+		// TODO Auto-generated method stub
+		return userDao.validateUser(email);
+	}
+	public int getSize() {
+		// TODO Auto-generated method stub
+		return userDao.getSize();
+	}
+	public void batchDelete() {
+		// TODO Auto-generated method stub
+		userDao.batchDelete();
+	}
+	public String getUserHQL(User user) {
+		// TODO Auto-generated method stub
+		return userDao.getUserQuery(user);
+	}
+	public User findById(Long id) {
+		// TODO Auto-generated method stub
+		return userDao.findById(id);
+	}
+	public void update(User u) {
+		// TODO Auto-generated method stub
+		userDao.update(u);
+	}
+	public void deleteuser(User u) {
+		// TODO Auto-generated method stub
+		userDao.deleteUser(u);
+	}
+	public boolean ValidateUserName(String userName) {
+		// TODO Auto-generated method stub
+		return userDao.ValidateUserName(userName);
+	}
+	
+
+}

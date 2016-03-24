@@ -1,0 +1,390 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+
+	<!-- struts.ui.theme=simple可以解决struts2标签自动换行问题，即不再自动被添加进table标签中  -->
+	<constant name="struts.ui.theme" value="simple" />
+	<constant name="struts.i18n.encoding" value="UTF-8" />
+	
+    <constant name="struts.enable.DynamicMethodInvocation" value="false" />
+    <constant name="struts.multipart.maxSize" value="1024000000"/>
+    <constant name="struts.custom.i18n.resources" value="i18n"></constant>
+  <package name="default" extends="struts-default">
+
+
+  <global-results>
+            <result name="error">/404.jsp</result>
+                   
+ </global-results>
+
+        <global-exception-mappings>
+            <exception-mapping exception="java.lang.Exception" result="error"/>
+        </global-exception-mappings>
+
+		
+    	 
+	     <!-- 课程管理 -->
+        <action name="courseAction_*" class="courseAction" method="{1}">
+        	
+        	 <interceptor-ref name="defaultStack">  
+           <param name="fileUpload.allowedTypes">flash/*,text/plain,application/pdf</param>  
+            <!--配置允许上传文件的扩展名,如果有多个用","隔开  -->  
+            <param name="fileUpload.allowedExtensions">swf,txt,pdf</param>  
+        </interceptor-ref>  
+        	<result name="toenter">/C_design.jsp</result>
+        	<result name="test">/test.jsp</result>
+        	<result name="tolist">/backstage/courseManage.jsp</result>    	
+        	<result name="todelete" type="redirect">/courseAction_list</result>
+
+        	<result name="switchType">/backstage/switchType.jsp</result>
+        	<result name="getType">/backstage/switchType.jsp</result>
+    
+
+        	<result name="update" type="redirect">/courseAction_list</result>
+        	<result name="toaddCourse">/backstage/addCourse.jsp</result>
+        	<result name="addError">/backstage/addCourse.jsp</result>
+        	<result name="input">/backstage/addCourse.jsp</result>
+        	<result name="toedit">/backstage/CourseEdit.jsp</result>
+        	<result name="backteacherror">/backstage/outline/teachOutlineEdit.jsp</result>
+        	<result name="toteachDetail">/backstage/outline/teachOutlineEdit.jsp</result>
+        	<result name="toexamDetail">/backstage/outline/examOutlineEdit.jsp</result>
+        	<result name="backexamerror">/backstage/outline/examOutlineEdit.jsp</result>
+            <result name="toexperimentDetail">/backstage/outline/experimentOutlineEdit.jsp</result>
+            <result name="backexperimenterror">/backstage/outline/experimentOutlineEdit.jsp</result>
+            <result name="tocalendarDetail">/backstage/outline/teachCalendarEdit.jsp</result>
+            <result name="backcalendarerror">/backstage/outline/teachCalendarEdit.jsp</result>
+            <result name="toscoreDetail">/backstage/outline/scoreEdit.jsp</result>
+            <result name="backscoreerror">/backstage/outline/scoreEdit.jsp</result>
+            <result name="toaddList">/backstage/addChapter.jsp</result>
+            <result name="addChapter" type="redirect">/courseAction_addList</result>
+            <result name="toChapterError">/backstage/addChapter.jsp</result>
+            <result name="tochapterList">/backstage/videoUpload.jsp</result>
+            <result name="tolocalAddChapterList">/backstage/localVideoUpload.jsp</result>
+            <result name="toaddVideo" type="redirect">/courseAction_addChapterList</result>
+            <result name="enterCourse">/C_courseStudy.jsp</result>
+            <result name="toAddVideoError">/backstage/videoUpload.jsp</result>
+            <result name="toenterVideoPage">/VideoPage.jsp</result>
+            <result name="littleVideo">/littleVideo.jsp</result>
+            <result name="nothing">/littleVideoNull.jsp</result>
+            <result name="toswitchVideo">/VideoPage.jsp</result>
+            <result name="toswitchlittleVideo">/littleVideo.jsp</result>
+            <result name="toaddDownload">/download.jsp</result>
+            <result name="toaddDownload_ppt">/download_ppt.jsp</result>
+            <result name="tochapterManage">/backstage/chaperManage.jsp</result>
+            <result name="tochapterDelete" type="redirect">/courseAction_chapterManage?courseid=${courseid}</result>
+            <result name="tobatchDelete" type="redirect">/courseAction_chapterManage</result>
+            <result name="toupdate">/backstage/updateCourse.jsp</result>
+          	
+         
+            <result name="toDownload" type="stream">
+           <param name="bufferSize">4096</param>
+            </result>
+            <result name="touClass" type="stream">
+           <param name="bufferSize">4096</param>
+            </result>
+              <result name="touClassError">/app.jsp</result>
+              <result name="toDownloadError">/download.jsp</result>
+            
+	   </action>
+	    <!-- 首页管理 -->
+        <action name="homeAction_*" class="homeAction" method="{1}">
+        <!--
+        	<result name="tobackstage">/backstage/backgroundall.jsp</result>
+        	-->
+        		<result name="teachOutline">/teachOutline.jsp</result>
+        		<result name="backteachOutline">/backstage/teachOutlineEdit.jsp</result>
+        		<result name="editerror">/backstage/teachOutlineEdit.jsp</result>
+        		
+        		<result name="teachCalendar">/teachCalendar.jsp</result>
+        		<result name="examOutline">/examOutline.jsp</result>
+        		<result name="scoreOutline">/scoreOutline.jsp</result>
+        		<result name="error">/teachCalendar.jsp</result>
+        		<result name="examerror">/examOutline.jsp</result>
+        		<result name="scoreerror">/scoreOutline.jsp</result>
+        		<result name="guideerror">/studyGuide.jsp</result>
+        		<result name="guideOutline">/studyGuide.jsp</result>
+        		<result name="teacherror">/teachOutline.jsp</result>
+        		<result name="contenterror">/bookIntroduct.jsp</result>
+        		<result name="introductContent">/bookIntroduct.jsp</result>
+        	
+	   </action>
+	    <!-- 新闻管理 -->
+        <action name="newsAction_*" class="newsAction" method="{1}">
+        	<result name="tosave" type="redirect">/newsAction_list</result>
+        	<result name="toindexList">/index.jsp</result>
+        		<result name="toedit">/backstage/newsEdit.jsp</result>
+        		<result name="tolist">/backstage/newsList.jsp</result>
+        		<result name="toupdate">/backstage/updateNews.jsp</result>
+        		<result name="toexecute" type="redirect">/newsAction_list</result>
+        		<result name="todelete" type="redirect">/newsAction_list</result>
+        		<result name="newsDetail">/newsDetail.jsp</result>
+        		<result name="deleteError">/newsAction_list</result>
+	   </action>
+	    <!-- 微知识管理 -->
+        <action name="knowledgeAction_*" class="knowledgeAction" method="{1}">
+        	<result name="toaddUI">/backstage/addKnowledge.jsp</result>
+        	<result name="tosave">/backstage/addKnowledge.jsp</result>
+        	<result name="tomanage">/backstage/knowledgeManage.jsp</result>
+        	<result name="tolist">/littleknowledge.jsp</result>
+        	<result name="todelete" type="redirect">/knowledgeAction_knowledgeManage</result>
+        	
+	   </action>
+	    <!-- 错误分析管理 -->
+        <action name="errorAnalyseAction_*" class="errorAnalyseAction" method="{1}">
+        	<result name="toaddUI">/backstage/addErrorAnalyse.jsp</result>
+        	<result name="addErrorAnalyse">/backstage/addErrorAnalyse.jsp</result>
+        	<result name="addError">/backstage/addErrorAnalyse.jsp</result>
+        	<result name="toenter">/erroranalysis.jsp</result>
+        	<result name="analyseManage">/backstage/errorAnalyseManage.jsp</result>
+        	<result name="todelete" type="redirect">/errorAnalyseAction_errorAnalyseManage</result>
+        
+        	
+	   </action>
+	    <!-- 错误分析管理 -->
+        <action name="programAction_*" class="programAction" method="{1}">
+        	<result name="enter">/backstage/addProgram.jsp</result>
+        	<result name="toadd">/backstage/addProgram.jsp</result>
+        	<result name="programError">/backstage/addProgram.jsp</result>
+        	<result name="tolist">/trainProgram.jsp</result>
+        	<result name="todetail">/trainDetail.jsp</result>
+        	<result name="programManage">/backstage/programManage.jsp</result>
+        	<result name="todelete" type="redirect">/programAction_programManage</result>
+        	<result name="programVideo">/programVideo.jsp</result>
+        	
+        	
+	   </action>
+	    <!-- 反转课堂管理 -->
+        <action name="preCourseAction_*" class="preCourseAction" method="{1}">
+        	  <result name="toaddPre">/backstage/addPre.jsp</result>
+            <result name="addPreError">/backstage/addPre.jsp</result>
+            <result name="toaddpreUI">/backstage/addPre.jsp</result>
+            <result name="topreManage">/backstage/preManage.jsp</result>
+            <result name="topredelete">/preCourseAction_preManage?ChapterId=${ChapterId}</result>
+            <result name="batchError">/preCourseAction_preManage?ChapterId=${ChapterId}</result>
+            <result name="tobatch">/preCourseAction_preManage?ChapterId=${ChapterId}</result>
+        	
+	   </action>
+	    <!--教研活动管理 -->
+        <action name="activityAction_*" class="activityAction" method="{1}">
+        	  <result name="toadd">/backstage/addActivity.jsp</result>
+        	  <result name="addAcError">/backstage/addActivity.jsp</result>
+        	  <result name="enterUI">/activity.jsp</result>
+        	  <result name="acEdit">/activityDetail.jsp</result>
+        	  <result name="acManage">/backstage/activityManage.jsp</result>
+        	  <result name="ac_delete" type="redirect">/activityAction_acManage</result>
+        	  <result name="ac_deleteAll" type="redirect">/activityAction_acManage</result>
+         
+	   </action>
+	   
+	   
+	     <!--资源管理 -->
+      <action name="resourceAction_*" class="resourceAction" method="{1}"><!--
+        	 <interceptor-ref name="defaultStack">  
+           <param name="fileUpload.allowedTypes">application/x-shockwave-flash,text/plain,pdf,application/pdf</param>  
+            配置允许上传文件的扩展名,如果有多个用","隔开    
+            <param name="fileUpload.allowedExtensions">swf,txt,pdf</param>  
+        </interceptor-ref> 
+        		--><result name="tolist">/backstage/addExercises.jsp</result>
+        		<result name="toexamList">/backstage/addExames.jsp</result>
+        		<result name="toexperimentList">/backstage/addExperiment.jsp</result>
+        		<result name="tocaseList">/backstage/addCase.jsp</result>
+        		<result name="toCourseResource">/courseResource.jsp</result>
+        		<result name="toexercise" type="redirect">/resourceAction_resourceManage?type=${type}</result>
+        		<result name="toresourceManage">/backstage/resourceManage.jsp</result>
+        		<result name="deleteresource" type="redirect">/resourceAction_resourceManage?type=${test}</result>
+        		<result name="todelete" type="redirect">/resourceAction_resourceManage?type=${type}</result>
+        		<result name="deleteError" type="redirect">/resourceAction_resourceManage?type=${type}</result>
+        		
+        		<result name="tovideodelete" type="redirect">/resourceAction_videoManage</result>
+        		<result name="videodeleteError" type="redirect">/resourceAction_videoManage</result>
+        		<result name="deletevideo" type="redirect">/resourceAction_videoManage</result>
+        		<result name="resourceEdit">/backstage/resourceEdit.jsp</result>
+        		<result name="resourceError">/backstage/resourceEdit.jsp</result>
+        		
+        		<result name="toExamError">/backstage/addExames.jsp</result>
+        		<result name="toCaseError">/backstage/addCase.jsp</result>
+        		<result name="toResourceError">/backstage/addExercises.jsp</result>
+        		<result name="toExperimentError">/backstage/addExperiment.jsp</result>
+        		<result name="toVideoError">/backstage/localVideoUpload.jsp</result>
+        		<result name="toaddVideo" type="redirect">/resourceAction_videoManage</result>
+        		<result name="tovideoManage">/backstage/videoManage.jsp</result>
+        		
+        		
+	   </action>
+	   <!-- 用户管理 -->
+       <action name="userAction_*" class="userAction" method="{1}">
+        	<result name="academyList">/jingsai.jsp</result>
+        	<result name="notOpen">/competition_NotOpen.jsp</result>
+        	<result name="toErrors">/jingsai.jsp</result>
+            <result name="tologinError">/index.jsp</result>
+        	<result name="toupdatePassword">/index.jsp</result>
+        	<result name="toLogin">/success.jsp</result>
+        	<result name="changeCancel">/index.jsp</result>
+        	<result name="changePhoto">/index.jsp</result>
+        	<result name="tobackError">/backstage/backLogin.jsp</result>
+        	<result name="tobackStage">/backstage/backgroundall.jsp</result>
+        	<result name="toLoginout">/index.jsp</result>
+        	<result name="tobackOut">/index.jsp</result>
+        	<result name="tobbsUserLogin" type="redirect">/forumAction_list</result>
+        	<result name="tobbsloginError" type="redirect">/forumAction_list?bbs=${loginbssError}</result>
+        	<result name="toUserLogin">/index.jsp</result>
+        	<result name="toUserRigest">/registSuccess.jsp</result>
+        	<result name="toCompetition">/backstage/jingsaiTable.jsp</result>
+        	<result name="userManage">/backstage/userManage.jsp</result>
+        	<result name="toinit" type="redirect">/userAction_userManage</result>
+        	<result name="userDelete" type="redirect">/userAction_userManage</result>
+        	<result name="toExportExcel" type="stream">
+        	 <param name="bufferSize">4096</param>
+        	</result>
+        	<result name="toDelete" type="redirect">/userAction_competitionManage</result>
+        	<result name="acmdelete" type="redirect">/userAction_competitionManage</result>
+        	<result name="acmdeleteError" type="redirect">/userAction_competitionManage</result>
+        	<result name="toError">/test.jsp</result>
+        	<result name="toModifyPwd">/backstage/modifyPwd.jsp</result>
+        	<result name="modifySuccess" type="redirect">/userAction_userManage</result>
+        	
+	   </action>
+	   <!-- 用户管理 -->
+        <action name="toolsAction_*" class="toolsAction" method="{1}">
+      		<result name="toupload">/backstage/otherUpload.jsp</result>
+        	<result name="toErrors">/backstage/otherUpload.jsp</result>
+        	<result name="tomanage">/backstage/otherManager.jsp</result>
+        	<result name="addTeachChange">/backstage/addTeachChange.jsp</result>
+        	<result name="showTeachChange">/teachRevolution.jsp</result>
+        	<result name="todelete" type="redirect">/toolsAction_otherManage</result>
+        	        
+	   </action>
+	   <!-- 用户管理 -->
+        <action name="downloadResourceAction_*" class="downloadResourceAction" method="{1}">
+        	<result name="toaddUI">/teachCase.jsp</result>
+        	<result name="toaddList">/backstage/courseResService.jsp</result>
+        	<result name="toaddCourseRes" type="redirect">/downloadResourceAction_resourceAddUI</result>
+        	<result name="tomanage">/backstage/downloadManage.jsp</result>
+        	<result name="toEdit">/backstage/resourceEdit.jsp</result>
+        	<result name="editError">/backstage/resourceEdit.jsp</result>
+        	<result name="todelete" type="redirect">/downloadResourceAction_downloadManage?grade=${grades}</result>
+        	<result name="deleteError" type="redirect">/downloadResourceAction_downloadManage?grade=${grades}</result>
+        	<result name="addError">/backstage/courseResService.jsp</result>
+        	<result name="selectAll">/searchCenter.jsp</result>
+        	<result name="uploadError">/backstage/courseResService.jsp</result>
+        	<result name="toResourceDownload" type="stream">
+            <param name="bufferSize">4096</param>
+           </result>
+           <result name="todownloadError">/teachCase.jsp</result>
+        	
+        
+	   </action>
+	   <!-- 论坛管理 -->
+        <action name="forumAction_*" class="forumAction" method="{1}">
+        	<result name="tolist">/bbs.jsp</result>
+        	<result name="toaddForum" type="redirect">/forumAction_list</result>
+        	<result name="toDelete" type="redirect">/forumAction_forumManage</result>
+        	<result name="toDeleteError" type="redirect">/forumAction_forumManage</result>
+        	<result name="tobatchDelete" type="redirect">/forumAction_forumManage</result>
+        	<result name="toforumManage">/backstage/forumManage.jsp</result>
+        	<result name="forumError" type="redirect">/forumAction_list?forumError=this</result>
+        	         
+	   </action>
+	   <!-- 论坛回复管理 -->
+        <action name="replyAction_*" class="replyAction" method="{1}">
+        	<result name="toList">/reply.jsp</result>
+        	<result name="toreplyManage">/backstage/replyManage.jsp</result>
+        	<result name="toDeleteError" type="redirect">/replyAction_replyManage</result>
+        	<result name="tobatchDelete" type="redirect">/replyAction_replyManage</result>
+        	<result name="todelete"  type="redirect">/replyAction_replyManage?forum=${forumId}</result>
+        	<result name="toaddReply" type="redirect">/replyAction_list?forumId=${forumId}</result>
+        	<result name="checkInform">/bbsMessager.jsp</result>
+        	
+        	         
+	   </action>
+	   <!-- 作业提交管理 -->
+        <action name="homeworkUploadAction_*" class="homeworkUploadAction" method="{1}">
+        	<result name="toAddTeacherList">/homework.jsp</result>
+        	<result name="toUploadError">/homework.jsp</result>
+        	<result name="toUploadHomework">/index.jsp</result>
+        	<result name="tobackAddHomework">/backstage/homeworkManage.jsp</result>
+        	<result name="toHomeworkDownloadError">/backstage/homeworkManage.jsp</result>
+        	<result name="todelete">/homeworkUploadAction_backAddHomework</result>
+        	<result name="deleteError">/homeworkUploadAction_backAddHomework</result>
+        	<result name="tohomeworkDownload" type="stream">
+        	 <param name="bufferSize">4096</param>
+        	</result>
+        	
+        
+	   </action>
+	   <!-- 在线测试管理 -->
+        <action name="questionAction_*" class="questionAction" method="{1}">
+        	<result name="toaddList">/onlineTest.jsp</result>
+        	<result name="toResult">/testResult.jsp</result>
+        	<result name="toEnterAdd">/backstage/addQuestion.jsp</result>
+        	<result name="addQuestionError">/backstage/addQuestion.jsp</result>
+        	<result name="toquestionManage">/backstage/questionManage.jsp</result>
+        	<result name="toquestionEdit">/backstage/updateQuestion.jsp</result>
+        	<result name="toquestionDelete" type="redirect">/questionAction_questionManage</result>
+        	<result name="toupdateQuestion" type="redirect">/questionAction_questionManage?updateId=${updateId}</result>
+        	<result name="toaddQuestion" type="redirect">/questionAction_questionManage</result>
+        	<result name="questiondeleteError" type="redirect">/questionAction_questionManage</result>
+        	<result name="questiondelete" type="redirect">/questionAction_questionManage</result>
+        	
+        
+	   </action>
+	   <!-- 教学团队管理 -->
+        <action name="teachTeamAction_*" class="teachTeamAction" method="{1}">
+        	<result name="toaddUI">/teacherTeam.jsp</result>
+        	<result name="toaddList">/backstage/addTeacher.jsp</result>
+        	<result name="tomaterialUI">/backstage/addmaterial.jsp</result>
+        	<result name="addmaterialError">/backstage/addmaterial.jsp</result>
+        	<result name="touploadMaterial">/backstage/addmaterial.jsp</result>
+        	<result name="tomaterialManage">/backstage/materialManage.jsp</result>
+        	<result name="todeleteMaterial" type="redirect">/teachTeamAction_materialManage</result>
+        	<result name="materialDeleteError" type="redirect">/teachTeamAction_materialManage</result>
+        	<result name="tomaterialbatch" type="redirect">/teachTeamAction_materialManage</result>
+        	<result name="toaddHonorError">/backstage/addHonor.jsp</result>
+        	<result name="touploadHonor">/backstage/addHonor.jsp</result>
+        	<result name="toaddHonorUI">/backstage/addHonor.jsp</result>
+        	<result name="todeleteHonor" type="redirect">/teachTeamAction_honorManage</result>
+        	<result name="tohonorbatch" type="redirect">/teachTeamAction_honorManage</result>
+        	<result name="honorDeleteError" type="redirect">/teachTeamAction_honorMange</result>
+        	<result name="tohonorManage" >/backstage/honorManage.jsp</result>
+        	<result name="addError">/backstage/addTeacher.jsp</result>
+        	<result name="toTeamDelete" type="redirect">/teachTeamAction_teamManage</result>
+        	<result name="teamdeleteError" type="redirect">/teachTeamAction_teamManage</result>
+        	<result name="teamdelete" type="redirect">/teachTeamAction_teamManage</result>
+        	<result name="topicdeleteError" type="redirect">/teachTeamAction_teachTopicManager</result>
+        	<result name="topicdelete" type="redirect">/teachTeamAction_teachTopicManager</result>
+        	<result name="thesisdeleteError" type="redirect">/teachTeamAction_thesisManage</result>
+        	<result name="thesisdelete" type="redirect">/teachTeamAction_thesisManage</result>
+        	<result name="toTeamManage">/backstage/teamManage.jsp</result>
+        	<result name="toaddManageUI">/backstage/teamManage.jsp</result>
+        	<result name="togetTeam">/backstage/teamManage.jsp</result>
+        	<result name="toEdit">/backstage/teamEdit.jsp</result>
+        	<result name="uploadError">/backstage/teamEdit.jsp</result>
+        	<result name="toaddTeacher">/backstage/teamEdit.jsp</result>
+        	<result name="editError">/backstage/teamEdit.jsp</result>
+        	<result name="toUpdate" type="redirect">/teachTeamAction_teamManage</result>
+        	<result name="toaddTeachTopic">/backstage/addTeachTopic.jsp</result>
+        	<result name="touploadError">/backstage/addTeachTopic.jsp</result>
+        	<result name="touploadTopic" type="redirect">/teachTeamAction_teachTopicManager</result>
+        	<result name="tomanage" >/backstage/teachTopicManage.jsp</result>
+        	<result name="todeleteTopic" type="redirect">/teachTeamAction_teachTopicManager</result>
+        	<result name="toaddThesisUI">/backstage/addThesis.jsp</result>
+        	<result name="toaddThesis" type="redirect">/teachTeamAction_thesisManage</result>
+        	<result name="toThesisError">/backstage/addThesis.jsp</result>
+        	<result name="toThesismanage">/backstage/thesisManage.jsp</result>
+        	<result name="todeleteThesis" type="redirect">/teachTeamAction_thesisManage</result>
+        	
+        
+	   </action>
+	   
+	   
+	   
+	   
+	   
+       </package>
+
+  
+
+</struts>

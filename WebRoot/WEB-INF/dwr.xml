@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE dwr PUBLIC "-//GetAhead Limited//DTD Direct Web Remoting 3.0//EN" "http://getahead.org/dwr/dwr30.dtd">  
+<dwr>  
+    <allow>  
+<!-- List到页面上，就是数组。Map到页面上，就这样去rtu["字段名称"]，如过从数据库中查询到的，记得字段名称大写 -->  
+        <convert converter="array" match="*"/>  
+        <convert converter="array" match="[[*"/>  
+        <convert converter="collection" match="java.util.Collection"/>  
+        <!-- 传统的DWR -->  
+        <create javascript="CourseAction" creator="spring">  
+            <param name="beanName"  value="courseAction" />
+
+            <include method="findCourse"></include>
+             <include method="getChapterList"></include>
+        </create>  
+
+        <create javascript="UserAction" creator="spring">  
+            <param name="beanName"  value="userAction" />
+        </create>  
+        <create javascript="TeachTeamAction" creator="spring">  
+            <param name="beanName"  value="teachTeamAction" />
+        </create>  
+        <create javascript="preCourseAction" creator="spring">  
+            <param name="beanName"  value="preCourseAction" />
+        </create>  
+       
+        <convert converter="bean" match="com.jxust.bean.Chapter">   </convert>  
+        <convert converter="bean" match="com.jxust.bean.DownloadResource">   </convert>  
+        <convert converter="bean" match="com.jxust.bean.TeachTeam">   </convert>  
+        <convert converter="bean" match="com.jxust.bean.TeachTopic">   </convert>  
+        <convert converter="bean" match="com.jxust.bean.Thesis">   </convert>  
+        <convert converter="bean" match="com.jxust.bean.Question">   </convert>  
+        <convert converter="bean" match="com.jxust.bean.Course">   </convert>  
+        <convert converter="bean" match="com.jxust.bean.Video">   </convert>  
+        <convert converter="bean" match="com.jxust.bean.PreCourse">   </convert>  
+        <convert converter="bean" match="com.jxust.bean.Tools">   </convert>  
+        <convert converter="bean" match="com.jxust.service.serviceImpl.VideoServiceImpl">   </convert>  
+          
+    </allow>  
+       <signatures>  
+        <![CDATA[ 
+        import java.util.Map ; 
+        import java.util.List ; 
+        ]]>  
+    </signatures>  
+</dwr>

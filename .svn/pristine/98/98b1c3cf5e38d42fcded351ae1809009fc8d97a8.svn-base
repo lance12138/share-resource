@@ -1,0 +1,27 @@
+package com.jxust.service;
+
+import java.util.List;
+
+import com.jxust.bean.Reply;
+
+public interface ReplyService {
+
+	public List findAll();
+
+	public void save(Reply reply);
+
+	public String getHQL(Reply reply, Long forumId);
+
+	public int getQueryCount(String sql);
+
+	public List getListForPage(String hql, int startRow, int endRow);
+
+	public void delete(Long id);
+
+	public int getSize(Long forumId);
+
+	public void batchDelete(Long forumId);
+
+	public void update(Reply reply);
+
+}

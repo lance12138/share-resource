@@ -1,0 +1,32 @@
+package com.jxust.dao;
+
+import java.util.List;
+
+import com.jxust.base.BaseDao;
+import com.jxust.bean.ACMuser;
+import com.jxust.bean.User;
+
+public interface UserDao extends BaseDao<ACMuser>{
+
+	List findBygrade(int i);
+
+	boolean ajaxValidate(String card);
+
+	void saveUser(User user);
+	public User checkUser(String userName, String password, int i);//验证用户登录
+
+	boolean validateUser(String email);
+
+	public String getUserQuery(User user);
+
+	public User findById(Long id);
+
+	public void update(User u);
+
+	public void deleteUser(User u);
+
+	
+
+	
+
+}

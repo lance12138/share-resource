@@ -1,0 +1,51 @@
+﻿<!DOCTYPE hibernate-configuration PUBLIC
+	"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+<session-factory>
+
+	<!-- 数据库信息（连接信息写到spring的配置文件中） -->
+	<property name="dialect">
+		org.hibernate.dialect.MySQLDialect
+	</property>
+
+	<!-- 其他配置 -->
+	<property name="show_sql">true</property>
+	<property name="hbm2ddl.auto">update</property>
+	<mapping resource="com/jxust/bean/User.hbm.xml" />
+	<mapping resource="com/jxust/bean/Course.hbm.xml" />
+
+	<mapping resource="com/jxust/bean/Tools.hbm.xml" />
+	<mapping resource="com/jxust/bean/Resource.hbm.xml" />
+	<mapping resource="com/jxust/bean/Forum.hbm.xml" />
+	<mapping resource="com/jxust/bean/Reply.hbm.xml" />
+	<mapping resource="com/jxust/bean/News.hbm.xml" />
+	<mapping resource="com/jxust/bean/ACMuser.hbm.xml" />
+	<mapping resource="com/jxust/bean/Chapter.hbm.xml" />
+	<mapping resource="com/jxust/bean/Video.hbm.xml" />
+
+	<mapping resource="com/jxust/bean/Academy.hbm.xml" />
+	<mapping resource="com/jxust/bean/Question.hbm.xml" />
+	<mapping resource="com/jxust/bean/AttachFile.hbm.xml" />
+	<mapping resource="com/jxust/bean/Homework.hbm.xml" />
+	<mapping resource="com/jxust/bean/DownloadResource.hbm.xml" />
+	<mapping resource="com/jxust/bean/Thesis.hbm.xml" />
+	<mapping resource="com/jxust/bean/TeachTopic.hbm.xml" />
+	<mapping resource="com/jxust/bean/TeachTeam.hbm.xml" />
+	<mapping resource="com/jxust/bean/Knowledge.hbm.xml" />
+	<mapping resource="com/jxust/bean/TeamHonor.hbm.xml" />
+	<mapping resource="com/jxust/bean/TeachMaterial.hbm.xml" />
+	<mapping resource="com/jxust/bean/PreCourse.hbm.xml" />
+	<mapping resource="com/jxust/bean/Activity.hbm.xml" />
+	<mapping resource="com/jxust/bean/ErrorAnalyse.hbm.xml" />
+	<mapping resource="com/jxust/bean/Messages.hbm.xml" />
+	<mapping resource="com/jxust/bean/Program.hbm.xml" />
+
+
+
+
+
+
+</session-factory>
+</hibernate-configuration>

@@ -1,0 +1,59 @@
+package com.jxust.service.serviceImpl;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.jxust.bean.Reply;
+import com.jxust.dao.ReplyDao;
+import com.jxust.service.ReplyService;
+
+
+
+@Service
+@Transactional
+public class ReplyServiceImpl implements ReplyService{
+
+	@Resource
+	private ReplyDao replyDao;
+	public List findAll() {
+		// TODO Auto-generated method stub
+		return replyDao.findAll();
+	}
+	public void save(Reply reply) {
+		// TODO Auto-generated method stub
+		replyDao.save(reply);
+	}
+	public String getHQL(Reply reply, Long forumId) {
+		// TODO Auto-generated method stub
+		return replyDao.getHQL(reply,forumId);
+	}
+	public int getQueryCount(String hql) {
+		// TODO Auto-generated method stub
+		return replyDao.getCountByHQL(hql);
+	}
+	public List getListForPage(String hql, int startRow, int endRow) {
+		// TODO Auto-generated method stub
+		return replyDao.getListForPage(hql, startRow, endRow);
+	}
+	public void delete(Long id) {
+		// TODO Auto-generated method stub
+		 replyDao.delect(id);
+	}
+	public void batchDelete(Long forumId) {
+		// TODO Auto-generated method stub
+		replyDao.batchDelete(forumId);
+	}
+	public int getSize(Long forumId) {
+		// TODO Auto-generated method stub
+		return replyDao.getSize(forumId);
+	}
+	public void update(Reply reply) {
+		// TODO Auto-generated method stub
+		replyDao.update(reply);
+	}
+
+}

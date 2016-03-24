@@ -1,0 +1,936 @@
+package com.jxust.action;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
+
+import javax.annotation.Resource;
+
+import org.apache.struts2.ServletActionContext;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+
+import com.jxust.bean.Chapter;
+import com.jxust.bean.Course;
+import com.jxust.bean.PreCourse;
+import com.jxust.bean.TeachTeam;
+import com.jxust.bean.Tools;
+import com.jxust.bean.Video;
+import com.jxust.service.ChapterService;
+import com.jxust.service.CourseService;
+import com.jxust.service.PreCourseService;
+import com.jxust.service.ResourceService;
+import com.jxust.service.ToolsService;
+import com.jxust.service.VideoService;
+import com.jxust.util.PageToolBar;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.ModelDriven;
+
+@SuppressWarnings("serial")
+@Controller
+@Scope("prototype")
+public class CourseAction extends ActionSupport implements ModelDriven<Course>{
+ 
+	private String[] fileName;
+	public String[] getFileName() {
+		String[] downFileName = null;
+		for (int i = 0; i < fileName.length; i++) {
+			
+		/*
+		 * 处理中文问题
+		 * */
+		  downFileName[i] = fileName[i];   
+		  
+	        try {   
+	  
+	            downFileName[i] = new String(downFileName[i].getBytes(), "ISO8859-1");   
+	  
+	        } catch (UnsupportedEncodingException e) {   
+	  
+	            e.printStackTrace();   
+	  
+	        }   
+		}
+	        return downFileName;   
+	  
+	    }   
+	
+	public void setFileName(String[] fileName) {
+		this.fileName = fileName;
+	}
+	private Course course;
+	public Course getCourse() {
+		return course;
+	}
+	public void setCourse(Course course) {
+		this.course = course;
+	}
+	private Chapter chapter=new Chapter();
+	private PreCourse pre;
+	public PreCourse getPre() {
+		return pre;
+	}
+
+	public void setPre(PreCourse pre) {
+		this.pre = pre;
+	}
+	private Video video=new Video();
+	public Video getVideo() {
+		return video;
+	}
+	public void setVideo(Video video) {
+		this.video = video;
+	}
+	public Chapter getChapter() {
+		return chapter;
+	}
+	public void setChapter(Chapter chapter) {
+		this.chapter = chapter;
+	}
+	private Course temp=new Course();
+	
+	public Course getTemp() {
+		return temp;
+	}
+	public void setTemp(Course temp) {
+		this.temp = temp;
+	}
+	
+	private String contentType;
+	public String getContentType() {
+		return contentType;
+	}
+	public long getContentLength() {
+		return contentLength;
+	}
+	public String getContentDisposition() {
+		return contentDisposition;
+	}
+	private long contentLength;
+	private String contentDisposition;
+	private InputStream inputStream;
+	public InputStream getInputStream() {
+		return inputStream;
+	}
+	private File teach;
+	private String teachFileName;
+	private String teachContentType;
+	private File experiment;
+	private String experimentFileName;
+	private String experimentContentType;
+	private File exam;
+	private String examFileName;
+	private String examContentType;
+	private File grade;
+	private String gradeFileName;
+	private String gradeContentType;
+	private File calendar;
+	private String calendarFileName;
+	public File getCalendar() {
+		return calendar;
+	}
+	public void setCalendar(File calendar) {
+		this.calendar = calendar;
+	}
+	public String getCalendarFileName() {
+		return calendarFileName;
+	}
+	public void setCalendarFileName(String calendarFileName) {
+		this.calendarFileName = calendarFileName;
+	}
+	public String getCalendarContentType() {
+		return calendarContentType;
+	}
+	public void setCalendarContentType(String calendarContentType) {
+		this.calendarContentType = calendarContentType;
+	}
+
+
+
+	List<Course> ThreeList;
+	
+	public List<Course> getThreeList() {
+		return ThreeList;
+	}
+	public void setThreeList(List<Course> threeList) {
+		ThreeList = threeList;
+	}
+	private String calendarContentType;
+	Long courseId;
+	String type;
+	Long courseid;
+	Long videoId;
+	public Long getVideoId() {
+		return videoId;
+	}
+	public void setVideoId(Long videoId) {
+		this.videoId = videoId;
+	}
+	public void setCourseid(Long courseid) {
+		this.courseid = courseid;
+	}
+	Long Testid;
+	public Long getTestid() {
+		return Testid;
+	}
+	public void setTestid(Long testid) {
+		Testid = testid;
+	}
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
+	}
+
+
+
+
+	private PageToolBar toolBar;
+	private int pageSize = 6;
+	private int currentPage = 1;
+	public PageToolBar getToolBar() {
+		return toolBar;
+	}
+	public void setToolBar(PageToolBar toolBar) {
+		this.toolBar = toolBar;
+	}
+	public int getPageSize() {
+		return pageSize;
+	}
+	public void setPageSize(int pageSize) {
+		this.pageSize = pageSize;
+	}
+	public int getCurrentPage() {
+		return currentPage;
+	}
+	public void setCurrentPage(int currentPage) {
+		this.currentPage = currentPage;
+	}
+	public Long getCourseId() {
+		return courseId;
+	}
+	public void setCourseId(Long courseId) {
+		this.courseId = courseId;
+	}
+
+	public File getTeach() {
+		return teach;
+	}
+	public void setTeach(File teach) {
+		this.teach = teach;
+	}
+	public String getTeachFileName() {
+		return teachFileName;
+	}
+	public void setTeachFileName(String teachFileName) {
+		this.teachFileName = teachFileName;
+	}
+	public String getTeachContentType() {
+		return teachContentType;
+	}
+	public void setTeachContentType(String teachContentType) {
+		this.teachContentType = teachContentType;
+	}
+	Set<Chapter> getChapterList=null;
+	
+	
+	
+	
+	public Set<Chapter> getGetChapterList() {
+		return getChapterList;
+	}
+	public void setGetChapterList(Set<Chapter> getChapterList) {
+		this.getChapterList = getChapterList;
+	}
+	
+	@Resource
+	private CourseService courseService;
+	@Resource
+	private ChapterService chapterService;
+	@Resource
+	private VideoService videoService;
+	@Resource
+	private ToolsService toolsService;
+
+	//分页
+   public String list()throws Exception{
+	   if(course==null){
+		   course=new Course();
+	   }
+	   String hql=courseService.getQueryHQL(course);
+	   int courseCount=courseService.getCountByHQL(hql);
+	   if(getToolBar()==null){
+		   setToolBar(new PageToolBar(courseCount,pageSize));
+		   
+	   }
+	   else{
+		   getToolBar().setResultsetCount(courseCount);
+			getToolBar().setPageSize(pageSize);
+	   }
+	   List courseList=courseService.getListForPage(hql, toolBar.getStartRow(), toolBar.getEndRow());
+	   ActionContext.getContext().put("courseList", courseList);
+	   return "tolist";
+   }
+   //查询所有
+   public String findAll()throws Exception{
+	   
+	   List allList=courseService.findAll();
+	   ActionContext.getContext().put("allList", allList);
+	   return "toall";
+   }
+   public String cDesign()throws Exception{
+	   return "todesign";
+   }
+   //删除课程
+  public String delete()throws Exception{
+	  courseService.delete(courseId);
+	  return "todelete";
+  }
+  //进入修改页面
+  
+  public String update()throws Exception{
+	 course=courseService.findById(courseId);	 
+	 ActionContext.getContext().put("course", course);
+	// ActionContext.getContext().put("courseId", courseId);
+	  return "toupdate";
+  }
+  //编辑界面
+  public String edit()throws Exception{
+	  course=courseService.findById(courseId);
+	  ActionContext.getContext().put("course", course);
+	  return "toedit";
+  }
+
+  //查看大纲细节
+  public String editDetail()throws Exception{
+	
+	  temp=courseService.findById(courseId);
+	  ActionContext.getContext().put("temp", temp);
+	  if(type.equals("1")){
+	  if(temp.getTeachOutline()==null){
+		  this.addFieldError("Errors", "未上传文件，请联系管理员");
+		  return"backteacherror";
+	  }
+	  return "toteachDetail";
+	  }
+	  else if(type.equals("2")){
+	  if(temp.getExamOutline()==null){
+		  
+		  this.addFieldError("Errors", "未上传文件，请联系管理员");
+		  return"backexamerror";
+	  }
+	  return "toexamDetail";
+	  }
+	  else if(type.equals("3")){
+		  if(temp.getExperimentOutline()==null)
+		  {
+			  this.addFieldError("Errors", "未上传文件，请联系管理员");
+			  return"backexperimenterror";
+		  }
+		  return "toexperimentDetail";
+	  }
+		  else if(type.equals("4")){
+			  if(temp.getTeachCalendar()==null){
+				  
+				  this.addFieldError("Errors", "未上传文件，请联系管理员");
+				  return"backcalendarerror";
+			  }
+			  return "tocalendarDetail";
+		  }	 
+		  else{
+			  if(temp.getScore()==null){
+				  this.addFieldError("Errors", "未上传文件，请联系管理员");
+				  return"backscoreerror";
+			  }
+			  return "toscoreDetail";
+		  }
+	 
+	  }
+	 
+
+  //修改
+ public String toUpdate()throws Exception{
+	 FileOutputStream fost = null;
+	 FileInputStream fist = null;
+	 temp=courseService.findById(courseId);
+	 //temp=(Course) ActionContext.getContext().getSession().get("course");
+	
+	 if(teach!=null){
+	   try {
+		   addCourseModel(fost, fist, teachFileName, teach,"teachOutlines/");
+		  temp.setTeachOutline(teachFileName);
+	   } catch (Exception e) {
+		   System.out.println("文件上传失败");
+		   e.printStackTrace();
+	   } 
+	 }
+	 if(calendar!=null){
+	   try {
+		   // 建立文件输出流
+		   addCourseModel(fost, fist, calendarFileName, calendar,"calendar/");
+		   
+		   temp.setTeachCalendar(calendarFileName);
+	   } catch (Exception e) {
+		   System.out.println("文件上传失败");
+		   e.printStackTrace();
+	   } 
+	   
+	 }
+	 if(experiment!=null){
+	   try {
+		   // 建立文件输出流
+		   addCourseModel(fost, fist, experimentFileName, experiment,"experimentOutlines/");
+		 
+		   temp.setExperimentOutline(experimentFileName);
+	   } catch (Exception e) {
+		   System.out.println("文件上传失败");
+		   e.printStackTrace();
+	   } 
+	 }
+	 if(exam!=null){
+	   try {
+		   // 建立文件输出流
+		   addCourseModel(fost, fist, examFileName, exam,"exames/");
+		   temp.setExamOutline(examFileName);
+	   } catch (Exception e) {
+		   System.out.println("文件上传失败");
+		   e.printStackTrace();
+	   } 
+	 }
+	 if(grade!=null){
+	   try {
+		   // 建立文件输出流
+		   addCourseModel(fost, fist, gradeFileName, grade,"scores/");
+		   temp.setScore(gradeFileName);
+	   } catch (Exception e) {
+		   System.out.println("文件上传失败");
+		   e.printStackTrace();
+	   } 
+	 }
+	 temp.setName(course.getName());
+	 temp.setIntroductContent(course.getIntroductContent());
+	 temp.setEditRecommend(course.getEditRecommend());
+	 temp.setWinCondiction(course.getWinCondiction());
+	 temp.setTime(course.getTime());
+	 temp.setCourseAttr(course.getCourseAttr());
+	 temp.setTeamIntroduct(course.getTeamIntroduct());
+	 courseService.update(temp);
+	 
+	 return "update";
+ }
+ public void modelList(){
+	 List CourseList=courseService.findAll();
+	  ActionContext.getContext().put("CourseList", CourseList);
+	 
+ }
+
+ public String addList()throws Exception{
+	 modelList();
+	
+	  return "toaddList";
+ }
+ //chapter页面装载数据
+ public String addChapterList()throws Exception{ 
+	 modelList();
+	 return "tochapterList";
+ }
+ //chapter视频上传页面装载数据
+ public String localAddChapterList()throws Exception{
+	 modelList();
+	 return "tolocalAddChapterList";
+ }
+ //后台添加章节
+ public String addChapter()throws Exception{
+	 if(chapter.getTitle()==null||chapter.getTitle().isEmpty()){
+		 ActionContext.getContext().put("chaperUpError", "章节名不能为空！");
+		 modelList();
+		 return"toChapterError";
+	 }
+	course= courseService.findBytitle(course.getName());
+
+	 chapter.setCourse(course);
+	 chapterService.save(chapter);
+	 return "addChapter";
+ }
+
+ public List<Course> findCourse(){
+	 
+	List<Course> CourseList=courseService.findAll();
+	return CourseList;
+ }
+ public String test(){
+		List<Course> CourseList=courseService.findAll();
+		ActionContext.getContext().put("list", CourseList);
+		ActionContext.getContext().put("hah", "jakldsjflskd");
+		
+		return "test1";
+ }
+ 
+ //进入设计主页面
+ public String enterCourse()throws Exception{
+	 course=courseService.findById(courseid);
+	 Set<TeachTeam> teacherList=course.getCourseTeacher();
+		/* TeachTeam teachTeam=teachTeamService.finById(course.getManagerId());
+			*/
+		
+		for (Iterator iterator = teacherList.iterator(); iterator.hasNext();) {
+			TeachTeam teachTeam = (TeachTeam) iterator.next();
+			if(teachTeam.getManager()!=null){
+				ActionContext.getContext().put("TeamManager", teachTeam);
+			}
+		}
+	 Set<Chapter> chapterList=course.getCourseChapter();//获取课程章节
+	 List<Video> videoList=videoService.getByCourse(courseid);
+	 ActionContext.getContext().put("chapterList", chapterList);
+	 ActionContext.getContext().put("videoList", videoList);
+	 ActionContext.getContext().put("courseid", courseid);
+	 
+	 return "enterCourse";
+ }
+
+ //章节分页
+ public String ChapterList()throws Exception{
+	
+             // int grade=0;
+		   String HQL=chapterService.getQueryHQL(courseid);
+		   course=courseService.findById(courseid);
+		   ActionContext.getContext().put("course", course);
+		  
+		   int chapterCount=chapterService.getCountByHQL(courseid,HQL);
+		   if(getToolBar()==null){
+			   setToolBar(new PageToolBar(chapterCount,pageSize));
+			   
+		   }
+		   else{
+			   getToolBar().setResultsetCount(chapterCount);
+				getToolBar().setPageSize(pageSize);
+		   }
+		   List chapterList=chapterService.getListForPage(HQL, toolBar.getStartRow(), toolBar.getEndRow(),courseid);
+		   ActionContext.getContext().put("ChapterVector", chapterList);
+		 
+		  return "toenter"; 
+ }
+ /**
+  * 章节管理
+  * @return
+  */
+ public String chapterManage(){
+	 modelList();
+	 String HQL=chapterService.getQueryHQL(courseid);
+	  
+	   int chapterCount=chapterService.getCountByHQL(courseid,HQL);
+	   if(getToolBar()==null){
+		   setToolBar(new PageToolBar(chapterCount,pageSize));
+		   
+	   }
+	   else{
+		   getToolBar().setResultsetCount(chapterCount);
+			getToolBar().setPageSize(pageSize);
+	   }
+	   List chapterList=chapterService.getListForPage(HQL, toolBar.getStartRow(), toolBar.getEndRow(),courseid);
+	   ActionContext.getContext().put("ChapterList", chapterList);
+	   ActionContext.getContext().put("courseid", courseid);
+	 return"tochapterManage";
+ }
+ /**
+  * 章节删除
+  * @return
+  */
+ public String chapterDelete(){
+	 chapterService.delete(chapter.getId());
+	 ActionContext.getContext().put("courseid", courseid);
+	 return"tochapterDelete";
+ }
+ public String chapterbatchDelete(){
+	List<Chapter> list=chapterService.findBycourse(courseid);
+	for (Iterator iterator = list.iterator(); iterator.hasNext();) {
+		Chapter chapter = (Chapter) iterator.next();
+		chapterService.delete(chapter.getId());
+	}
+	return"tobatchDelete";
+ }
+
+ 
+	//dwr二级联动
+ public Set<Chapter> getChapterList(String name)throws Exception{
+	  Course course=courseService.findBytitle(name);
+	 getChapterList=course.getCourseChapter();
+	
+	return getChapterList;
+ }
+  //添加video
+ public String addVideo()throws Exception{
+	 if(course.getName().equals("0")){
+		 ActionContext.getContext().put("course_title", "请选择要添加视频的课程!");
+		 modelList();
+		 return "toAddVideoError";
+	 }
+	 if(video.getName().isEmpty()||video.getName()==""){
+		 ActionContext.getContext().put("video_name", "视频名不可为空!");
+		 modelList();
+		 return "toAddVideoError";
+	 }
+	 if(video.getTitle().isEmpty()||video.getTitle()==""){
+		 
+		 ActionContext.getContext().put("video_url", "视频URL不可为空!");
+		 modelList();
+		 return "toAddVideoError";
+	 }
+	course=courseService.findBytitle(course.getName());
+	video.setCourse(course);
+	//video.setGrade(course.getId().intValue());
+	//video.setTitle(video.getName());//有问题需解决
+	videoService.save(video);
+	 
+	 return "toaddVideo";
+ }
+ /**
+  * 进入微视频
+  * @return
+  */
+ public String littleVideo(){
+	 Course course=courseService.findById(courseid);
+	 List<Video> little_videoList=videoService.findBygrade(courseid);
+	 if(little_videoList.size()>0){
+	 Video first=little_videoList.get(0);
+	 ActionContext.getContext().put("first", first);
+	 }
+	 ActionContext.getContext().put("little_videoList", little_videoList);
+	 ActionContext.getContext().put("courseid", courseid);
+	 
+	 return"littleVideo";
+ }
+ //微视频
+ public String switchlittleVideo()throws Exception{
+	 Course course=courseService.findById(courseid);
+	 Video first=videoService.getById(videoId);
+	 List<Video> little_videoList=videoService.findBygrade(courseid);
+	 ActionContext.getContext().put("first", first);
+	ActionContext.getContext().put("little_videoList", little_videoList);
+	ActionContext.getContext().put("course", course);
+	 return "toswitchlittleVideo";
+ }
+ //查出相关视频,为进入VideoPage准备数据
+ public String enterVideoPage()throws Exception{
+	 Course course=courseService.findById(courseid);
+	 List<Video> videoList=videoService.getByCourse(courseid);
+	 if(videoList.size()>0){
+	 Video videot=videoList.get(0);
+	 ActionContext.getContext().put("videot", videot);
+	 }
+	 ActionContext.getContext().put("videoList", videoList);
+	 ActionContext.getContext().put("courseid", courseid);
+	 
+	 return "toenterVideoPage";
+ }
+ //视频播放与视频预览切换
+ public String switchVideo()throws Exception{
+	 Course course=courseService.findById(courseid);
+	 Video videot=videoService.getById(videoId);
+	 List<Video> videoList=videoService.getByCourse(courseid);
+	 ActionContext.getContext().put("videot", videot);
+	ActionContext.getContext().put("videoList", videoList);
+	ActionContext.getContext().put("courseid", courseid);
+	 return "toswitchVideo";
+ }
+
+ /*
+  * 测试用的数据，在填充数据时需改！！！
+  * */
+ public String addDownload_homework()throws Exception{
+	// List<Video> videoesList=videoService.findAll();
+	 List<Tools> toolsList=toolsService.findother();
+	 ActionContext.getContext().put("videoesList", toolsList);
+	 return"toaddDownload";
+ }
+ /**
+  * 获取竞赛报名入口开关状态
+  * @return
+  */
+ public String getCourseType(){
+	 Course courseType=courseService.findById(1L);
+	 ActionContext.getContext().put("switch", courseType);
+	 return"getType";
+ }
+/**
+  * 开放竞赛报名入口/关闭报名入口
+  * @return
+  */
+ public String switchType(){
+	 
+	 Course course=courseService.findById(1L);
+	 if(course.getIsopen()==0){
+		 course.setIsopen(1);
+		
+	 }else{
+		 course.setIsopen(0);
+	 }
+	 courseService.update(course);
+	 ActionContext.getContext().put("msg", "竞赛报名入口状态以改变！");
+	 ActionContext.getContext().put("switch", course);
+	 return"switchType";
+ }
+ //测试
+ public String download()throws Exception{
+	 File zipFile=new File(ServletActionContext.getServletContext()//定义要输入的zip文件
+			   .getRealPath("images/testdownload/zipFile.zip"));
+	 
+	 File file=new File(ServletActionContext.getServletContext()
+				   .getRealPath("images/testdownload/"));
+	 if(file.isDirectory()){
+		   File[] files = file.listFiles();
+		   if(files.length!=0){
+			   for (File FILE:files) {//进入方法前先将文件夹清空
+				   FILE.delete();
+			}
+		   }
+	   }
+	String FilePath= ServletActionContext.getServletContext()
+	   .getRealPath("images/download/");
+		ZipOutputStream zos=new ZipOutputStream(new FileOutputStream(zipFile));
+		  byte[] buffer = new byte[1024];
+		 int temp = 0 ; 
+	
+		 FileInputStream input=null;
+		for (int i = 0; i < fileName.length; i++) {
+			try{
+			File Files=new File(FilePath+"\\"+fileName[i]);
+			 input=new FileInputStream(Files);
+			zos.putNextEntry(new ZipEntry(Files.getName()+File.separator+fileName[i]));//将文件放入zipEntry中
+			 while((temp=input.read(buffer))!=-1){ // 读取内容  
+                 zos.write(buffer, 0, temp) ;    // 压缩输出  
+             }
+			
+		}catch(Exception e1){
+			 List<Tools> toolsList=toolsService.findother();
+			 ActionContext.getContext().put("videoesList", toolsList);
+			ActionContext.getContext().put("error", fileName[i]+"文件不存在");
+			return"toDownloadError";
+		}
+		finally{
+			if(input!=null){
+			   input.close();
+			}
+			if(zos!=null){
+				zos.close();
+			}
+		}
+		}
+		
+	 contentType="application/x-zip-compressed";
+	contentDisposition="attachment;filename=test.zip";
+	String path=ServletActionContext.getServletContext()
+	   .getRealPath("images/download/");
+	
+		
+		inputStream=new FileInputStream(zipFile); 
+		System.out.println(inputStream);
+		contentLength=inputStream.available();
+	
+	return"toDownload";
+ }
+//下载腾云优课
+	public String uClassDownload(){
+		Tools tool=toolsService.findByGrade(0);
+	String uclass=tool.getOtherName();
+	try {
+		uclass=new String( uclass.getBytes(),"ISO8859-1");
+	} catch (UnsupportedEncodingException e1) {
+		// TODO Auto-generated catch block
+		ActionContext.getContext().put("error", "文件下载出错，请重新下载");
+		return"touClassError";
+	}
+		contentType="application/octet-stream";
+		contentDisposition="attachment;filename="+uclass;
+		String path=ServletActionContext.getServletContext()
+		   .getRealPath("images/download/");
+		try{
+			inputStream=new FileInputStream(path+"\\"+uclass);
+			contentLength=inputStream.available();
+		}catch(Exception e){
+			ActionContext.getContext().put("error", "文件不存在，请联系管理员");
+			return"touClassError";
+		}
+		return"touClass";
+	}
+ 
+ public void addCourseModel( FileOutputStream fost, FileInputStream fist,String FileName,File file,String fold)throws Exception{
+	 
+	 
+		 fost = new FileOutputStream(ServletActionContext.getServletContext()
+				   .getRealPath(fold + FileName));
+		   // 建立文件上传流
+		   fist = new FileInputStream(file);
+		   byte[] buffer = new byte[1024];
+		   int len = 0;
+		   while ((len = fist.read(buffer))!=-1) {
+			   fost.write(buffer, 0, len);
+		   }
+		   fost.close();
+		   fist.close();
+		   
+	 
+ }
+ 
+  //课程大纲上传，新增课程
+   public String addCourse()throws Exception{
+	   FileOutputStream fost = null;
+	   FileInputStream fist = null;
+	 
+	   try {
+		   addCourseModel(fost, fist, teachFileName, teach,"teachOutlines/");
+		  course.setTeachOutline(teachFileName);
+	   } catch (Exception e) {
+		   System.out.println("文件上传失败");
+		   e.printStackTrace();
+	   } 
+	   try {
+		   // 建立文件输出流
+		   addCourseModel(fost, fist, calendarFileName, calendar,"calendar/");
+		   
+		  course.setTeachCalendar(calendarFileName);
+	   } catch (Exception e) {
+		   System.out.println("文件上传失败");
+		   e.printStackTrace();
+	   } 
+	   try {
+		   // 建立文件输出流
+		   addCourseModel(fost, fist, experimentFileName, experiment,"experimentOutlines/");
+		 
+		   course.setExperimentOutline(experimentFileName);
+	   } catch (Exception e) {
+		   System.out.println("文件上传失败");
+		   e.printStackTrace();
+	   } 
+	   try {
+		   // 建立文件输出流
+		   addCourseModel(fost, fist, examFileName, exam,"exames/");
+		   course.setExamOutline(examFileName);
+	   } catch (Exception e) {
+		   System.out.println("文件上传失败");
+		   e.printStackTrace();
+	   } 
+	   try {
+		   // 建立文件输出流
+		   addCourseModel(fost, fist, gradeFileName, grade,"scores/");
+		   course.setScore(gradeFileName);
+	   } catch (Exception e) {
+		   System.out.println("文件上传失败");
+		   e.printStackTrace();
+	   }
+	   if(course.getName()==null||course.getName().isEmpty()){
+		   ActionContext.getContext().put("nameError", "课程名不可为空！");
+		   return"addError";
+	   }
+	   if(course.getIntroductContent()==null||course.getIntroductContent().isEmpty()){
+		   ActionContext.getContext().put("contentError", "课程介绍不可为空！");
+		   return"addError";
+	   }
+	   if(course.getEditRecommend()==null||course.getEditRecommend().isEmpty()){
+		   ActionContext.getContext().put("editError", "编辑推荐不可为空！");
+		   return"addError";
+	   }
+	   if(course.getExamOutline()==null||course.getExamOutline().isEmpty()){
+		   ActionContext.getContext().put("examError", "考试大纲不可为空！");
+		   return"addError";
+	   }
+	   if(course.getExperimentOutline()==null||course.getExperimentOutline().isEmpty()){
+		   ActionContext.getContext().put("experimentError", "实验大纲不可为空！");
+		   return"addError";
+	   }
+	   if(course.getScore()==null||course.getScore().isEmpty()){
+		   ActionContext.getContext().put("scoreError", "成绩评定不可为空！");
+		   return"addError";
+	   }
+	   if(course.getTeachCalendar()==null||course.getTeachCalendar().isEmpty()){
+		   ActionContext.getContext().put("calendarError", "教学日历不可为空！");
+		   return"addError";
+	   }
+	   if(course.getTeachOutline()==null||course.getTeachOutline().isEmpty()){
+		   ActionContext.getContext().put("teachError", "教学大纲不可为空！");
+		   return"addError";
+	   }
+	   if(course.getTime()==null||course.getTime().isEmpty()){
+		   ActionContext.getContext().put("timeError", "课程学时不可为空！");
+		   return"addError";
+	   }
+	   if(course.getCourseAttr()==null||course.getCourseAttr().isEmpty()){
+		   ActionContext.getContext().put("attrError", "课程属性不可为空！");
+		   return"addError";
+	   }
+	   int courseId=courseService.findTopCourseId();
+	   courseId++;
+	   course.setCourseId(courseId);
+       courseService.save(course);
+	   return "toaddCourse";
+   } 
+  
+   public File getExperiment() {
+	return experiment;
+}
+public void setExperiment(File experiment) {
+	this.experiment = experiment;
+}
+public String getExperimentFileName() {
+	return experimentFileName;
+}
+public void setExperimentFileName(String experimentFileName) {
+	this.experimentFileName = experimentFileName;
+}
+public String getExperimentContentType() {
+	return experimentContentType;
+}
+public void setExperimentContentType(String experimentContentType) {
+	this.experimentContentType = experimentContentType;
+}
+public File getExam() {
+	return exam;
+}
+public void setExam(File exam) {
+	this.exam = exam;
+}
+public String getExamFileName() {
+	return examFileName;
+}
+public void setExamFileName(String examFileName) {
+	this.examFileName = examFileName;
+}
+public String getExamContentType() {
+	return examContentType;
+}
+public void setExamContentType(String examContentType) {
+	this.examContentType = examContentType;
+}
+
+	public File getGrade() {
+	return grade;
+}
+public void setGrade(File grade) {
+	this.grade = grade;
+}
+public String getGradeFileName() {
+	return gradeFileName;
+}
+public void setGradeFileName(String gradeFileName) {
+	this.gradeFileName = gradeFileName;
+}
+public String getGradeContentType() {
+	return gradeContentType;
+}
+public void setGradeContentType(String gradeContentType) {
+	this.gradeContentType = gradeContentType;
+}
+	public Course getModel() {
+		// TODO Auto-generated method stub
+		return course;
+	}
+}

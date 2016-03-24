@@ -1,0 +1,56 @@
+package com.jxust.service.serviceImpl;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.jxust.bean.Knowledge;
+import com.jxust.dao.KnowledgeDao;
+import com.jxust.service.KnowledgeService;
+@Service
+@Transactional
+public class KnowledgeServiceImpl implements KnowledgeService{
+
+	@Resource
+	private KnowledgeDao knowledgeDao;
+
+	public void save(Knowledge knowledge) {
+		// TODO Auto-generated method stub
+		knowledgeDao.save(knowledge);
+	}
+
+	public String getHQL(Knowledge knowledge,Long courseid,Long chapterId) {
+		// TODO Auto-generated method stub
+		return knowledgeDao.getHQL(knowledge,courseid,chapterId);
+	}
+
+	public int getCount(String hql) {
+		// TODO Auto-generated method stub
+		return knowledgeDao.getCountByHQL(hql);
+	}
+
+	public List<Knowledge> getListForPage(String hql, int startRow, int endRow,
+			Long courseid) {
+		// TODO Auto-generated method stub
+		return knowledgeDao.getListForPage(hql, startRow, endRow,courseid);
+	}
+
+	public void delete(Long id) {
+		// TODO Auto-generated method stub
+		knowledgeDao.delect(id);
+	}
+
+	public int getSize(Long courseid) {
+		// TODO Auto-generated method stub
+		return knowledgeDao.getSize(courseid);
+	}
+
+	public void batchDelete(Long courseid) {
+		// TODO Auto-generated method stub
+		knowledgeDao.batchDelete(courseid);
+	}
+
+}

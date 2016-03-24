@@ -1,0 +1,374 @@
+package com.jxust.action;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
+import javax.annotation.Resource;
+
+import org.apache.struts2.ServletActionContext;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+
+import com.jxust.bean.Course;
+import com.jxust.bean.DownloadResource;
+import com.jxust.service.CourseService;
+import com.jxust.service.DownloadResourceService;
+import com.jxust.util.PageToolBar;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionSupport;
+@Controller
+@Scope("prototype")
+@SuppressWarnings("unchecked")
+public class DownloadResourceAction extends ActionSupport{
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private DownloadResource downloadResource;
+    
+	private int downloadId;
+	private Long resourceId;
+    private Long courseid;
+    private String courseName;
+    private int grade;
+    private Long cid;
+    private String search_input;
+	public String getSearch_input() {
+		return search_input;
+	}
+
+	public void setSearch_input(String searchInput) {
+		search_input = searchInput;
+	}
+    public Long getCid() {
+		return cid;
+	}
+
+	public void setCid(Long cid) {
+		this.cid = cid;
+	}
+
+	public int getGrade() {
+		return grade;
+	}
+
+	public void setGrade(int grade) {
+		this.grade = grade;
+	}
+
+	public File getResource() {
+		return resource;
+	}
+
+	public void setResource(File resource) {
+		this.resource = resource;
+	}
+
+	public String getResourceFileName() {
+		return resourceFileName;
+	}
+
+	public void setResourceFileName(String resourceFileName) {
+		this.resourceFileName = resourceFileName;
+	}
+
+	public String getResourceContentType() {
+		return resourceContentType;
+	}
+
+	public void setResourceContentType(String resourceContentType) {
+		this.resourceContentType = resourceContentType;
+	}
+
+	private File resource;
+    private String resourceFileName;
+    private String resourceContentType;
+	public String getCourseName() {
+		return courseName;
+	}
+
+	public void setCourseName(String courseName) {
+		this.courseName = courseName;
+	}
+
+	public void setResourceId(Long resourceId) {
+		this.resourceId = resourceId;
+	}
+
+	public Long getCourseid() {
+		return courseid;
+	}
+
+	public void setCourseid(Long courseid) {
+		this.courseid = courseid;
+	}
+
+	public Long getResourceId() {
+		return resourceId;
+	}
+
+	private long contentLength;
+	private String contentType;
+	private String downloadSelect;
+
+	public String getDownloadSelect() {
+		return downloadSelect;
+	}
+
+	public void setDownloadSelect(String downloadSelect) {
+		this.downloadSelect = downloadSelect;
+	}
+
+	private PageToolBar toolBar;
+	public PageToolBar getToolBar() {
+		return toolBar;
+	}
+
+	public void setToolBar(PageToolBar toolBar) {
+		this.toolBar = toolBar;
+	}
+
+	public int getPageSize() {
+		return pageSize;
+	}
+
+	public void setPageSize(int pageSize) {
+		this.pageSize = pageSize;
+	}
+
+	public int getCurrentPage() {
+		return currentPage;
+	}
+
+	public void setCurrentPage(int currentPage) {
+		this.currentPage = currentPage;
+	}
+
+	private int pageSize = 3;
+	private int currentPage = 1;
+    public String getContentType() {
+		return contentType;
+	}
+
+	private InputStream inputStream;
+    private String contentDisposition;
+	public long getContentLength() {
+		return contentLength;
+	}
+
+	public InputStream getInputStream() {
+		return inputStream;
+	}
+
+	public String getContentDisposition() {
+		return contentDisposition;
+	}
+
+	public int getDownloadId() {
+		return downloadId;
+	}
+
+	public void setDownloadId(int downloadId) {
+		this.downloadId = downloadId;
+	}
+
+	@Resource
+	private DownloadResourceService downloadResourceService;
+	@Resource
+	private CourseService courseService;
+	public DownloadResource getDownloadResource() {
+		return downloadResource;
+	}
+
+	public void setDownloadResource(DownloadResource downloadResource) {
+		this.downloadResource = downloadResource;
+	}
+/*
+ *进入教学教案或重点难点或电子课件界面 
+ * */
+	@SuppressWarnings("unchecked")
+	public String addUI()throws Exception{
+		
+		//Course course=courseService.findById(courseid);
+		//通过资源类型和课程类型来查出是哪一种。
+		List<DownloadResource> teachCaseList=downloadResourceService.findByGrade(downloadId,courseid);
+		
+		ActionContext.getContext().put("count", teachCaseList.size());
+		ActionContext.getContext().put("teachCaseList", teachCaseList);
+		ActionContext.getContext().put("courseid", courseid);
+		return "toaddUI";
+	}
+	/*
+	 * 进入后台添加教学资源页面
+	 * */
+	
+	public String resourceAddUI()throws Exception{
+		
+		List<Course> courseList=courseService.findAll();
+		ActionContext.getContext().put("courseList", courseList);
+		return "toaddList";
+	}
+	
+	/*
+	 * 下载教学资源
+	 * */
+	public String resourceDownload(){
+
+		DownloadResource resource=downloadResourceService.findById(resourceId);
+		contentType="text/plain";
+		contentDisposition="attachment;filename="+resource.getResourceName();
+		try {
+			String path=ServletActionContext.getServletContext().getRealPath("courseResource/");
+			File file=new File(path,resource.getResourceURL());
+			inputStream=new FileInputStream(file);
+			
+			contentLength=inputStream.available();
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			List teachCaseList=downloadResourceService.findByGrade(downloadId,courseid);
+			ActionContext.getContext().put("teachCaseList", teachCaseList);
+			ActionContext.getContext().put("error", "文件不存在！");
+			return"todownloadError";
+		}
+		return "toResourceDownload";
+	}
+	
+
+
+	  /*
+	    * 教学教案、电子课件、重点难点、微知识、程序互评等资源上传
+	    * */
+	   public String courseResUpload()throws Exception{
+		   FileInputStream fis=null;
+		   FileOutputStream fos=null;
+		   if(resource==null){
+				  List courseList=courseService.findAll();
+					ActionContext.getContext().put("courseList", courseList);
+			   ActionContext.getContext().put("error", "请先上传文件再提交！");
+			   return"uploadError";
+		   }
+		   if(downloadResource.getResourceName().isEmpty()){
+				  List courseList=courseService.findAll();
+					ActionContext.getContext().put("courseList", courseList);
+			   ActionContext.getContext().put("fileNameError", "文件名不能为空！");
+			   return"uploadError";
+		   }
+		   String path=ServletActionContext.getServletContext().getRealPath("/courseResource");
+		  File file=new File(path);
+		   if(!file.exists()&&!file.isDirectory()){
+			   file.mkdir();
+		   }
+		   try{
+			   
+			 fis=new FileInputStream(resource);
+			  fos=new FileOutputStream(path+"\\"+resourceFileName);
+			  int length=0;
+			  byte[] buffer=new byte[1024];
+			  while((length = fis.read(buffer))!=-1){
+				  fos.write(buffer, 0, length);
+			  }
+			  Course course=courseService.findBytitle(courseName);
+			  downloadResource.setCourseId(course.getId());
+			  downloadResource.setUploadDate(new Date());
+			  downloadResource.setCourseName(course.getName());
+			  downloadResource.setResourceURL(resourceFileName);
+			  downloadResourceService.save(downloadResource);
+		  }catch (Exception e) {
+			  List courseList=courseService.findAll();
+				ActionContext.getContext().put("courseList", courseList);
+				ActionContext.getContext().put("error", "文件上传出错，请重新上传");
+				
+			return "addError";
+		}finally{
+			if(fis!=null){
+				fis.close();
+			}
+			if(fos!=null){
+				fos.close();
+			}
+			
+		}
+		   
+		   return"toaddCourseRes";
+	   }
+	   //后台资源管理资源
+	   public String downloadManage(){
+		   if(downloadResource==null){
+			   downloadResource=new DownloadResource();
+		   }
+		   String hql=downloadResourceService.getHQL(downloadResource,downloadSelect,grade);
+		   int downloadCount=downloadResourceService.getCountByHQL(hql);
+		   if(getToolBar()==null){
+			   setToolBar(new PageToolBar(downloadCount, pageSize));
+		   } else{
+			   getToolBar().setResultsetCount(downloadCount);
+				getToolBar().setPageSize(pageSize);
+		   }
+		   List<DownloadResource> downloadList=downloadResourceService.getListgetListForPage(hql, toolBar.getStartRow(), toolBar.getEndRow());
+		   ActionContext.getContext().put("downloadList", downloadList);
+		   ActionContext.getContext().put("grade", grade);
+		   List<Course> courseList=courseService.findAll();
+			ActionContext.getContext().put("CourseList", courseList);
+		   return "tomanage";
+	   }
+	   //删除资源
+	   public String deleteResoure(){
+		   DownloadResource downloadResource=downloadResourceService.findById(resourceId);
+		   ActionContext.getContext().put("grades", downloadResource.getType()); 
+		   downloadResourceService.delete(resourceId);
+		   return"todelete";
+	   }
+	   /**
+	    * 批次删除
+	    * @return
+	    */
+	   public String resourcebatchDelete(){
+		
+		   int size=downloadResourceService.findSizeByGrade(grade,cid);
+		   if(size<=0){
+			   ActionContext.getContext().put("grades", grade);
+			   return "deleteError";
+		   }else{
+			   downloadResourceService.batchDelete(grade,cid);
+			   ActionContext.getContext().put("grades", grade);
+		   }
+		   return"todelete";
+	   }
+	   public String downloadEdit(){
+		   downloadResource=downloadResourceService.findById(resourceId);
+		   
+		  
+			  if(downloadResource.getResourceURL()==null||downloadResource.getResourceURL().isEmpty()){
+				ActionContext.getContext().put("downloadErrors", "文件未上传，请联系管理员");
+				  return "editError";
+			  }else{
+				  return "toEdit";
+		  }
+			  
+		  
+	   }
+	   
+	   /**
+		 * 全站搜索资源
+		 * @return
+		 */
+		public String SelectAll(){
+			 List<DownloadResource> keyList=downloadResourceService.findByKey(search_input);
+			 ActionContext.getContext().put("keyList", keyList);
+			return "selectAll";
+		}
+		
+	   
+}

@@ -1,0 +1,9 @@
+@charset "utf-8";
+/* CSS Document */
+.content{width:980px;height:538px;margin:10px auto; background:#f3f3f3;overflow:hidden;}
+.content ul{ float:left; margin-top:150px; margin-left:330px;border-bottom:1px solid #ccc; width:330px; height:100px; }
+.content ul img{ float:left; margin-left:30px; }
+.content ul li{ float:left; font-size:20px; width:200px; height:30px; font-family:"幼圆"; font-weight:bold; color:#99d138; margin-top:60px; margin-left:10px;}
+.content .tips{ position:absolute; width:288px; left:330px; top:300px; height:45px;  border:2px solid #f2a1b0; background:#f6b37f; font-size:14px; line-height:20px; padding:5px 20px; font-family:"微软雅黑"; color:#FFF;border-radius:5px; -moz-border-radius:5px;}
+.content .tips strong{color:#9f84bb;}
+

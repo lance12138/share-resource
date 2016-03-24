@@ -1,0 +1,161 @@
+package com.jxust.bean;
+
+import java.util.HashSet;
+import java.util.Set;
+
+
+
+public class Course {
+
+	private Long id;
+	private String name;//课程名
+	private String teachOutline;//教学大纲
+	private String experimentOutline;//实验大纲
+	private String examOutline;//考试大纲
+	private String teachCalendar;//教学日历
+	private String score;//成绩评定
+	private String introductContent;//课程介绍
+	private String editRecommend;//编辑推荐
+	private String winCondiction;//获奖情况
+	private String time;//课程学时
+	private String teamIntroduct;//团队整体介绍
+	private int isopen;//是否开放该学科竞赛报名入口
+
+	
+	
+	public int getIsopen() {
+		return isopen;
+	}
+	public void setIsopen(int isopen) {
+		this.isopen = isopen;
+	}
+	public String getTeamIntroduct() {
+		return teamIntroduct;
+	}
+	public void setTeamIntroduct(String teamIntroduct) {
+		this.teamIntroduct = teamIntroduct;
+	}
+	public String getTime() {
+		return time;
+	}
+	public void setTime(String time) {
+		this.time = time;
+	}
+	
+	public String getCourseAttr() {
+		return courseAttr;
+	}
+	public void setCourseAttr(String courseAttr) {
+		this.courseAttr = courseAttr;
+	}
+	private String courseAttr;//课程属性
+	
+	private int courseId;
+	
+	public int getCourseId() {
+		return courseId;
+	}
+	public void setCourseId(int courseId) {
+		this.courseId = courseId;
+	}
+	
+	
+	private Set<Chapter> courseChapter = new HashSet<Chapter>();
+	private Set<Video> courseVideo = new HashSet<Video>();
+	
+	private Set<Question> courseQuestion = new HashSet<Question>();
+	
+	private Set<TeachTeam> courseTeacher = new HashSet<TeachTeam>();
+	
+	
+	
+	public Set<TeachTeam> getCourseTeacher() {
+		return courseTeacher;
+	}
+	public void setCourseTeacher(Set<TeachTeam> courseTeacher) {
+		this.courseTeacher = courseTeacher;
+	}
+	public Set<Question> getCourseQuestion() {
+		return courseQuestion;
+	}
+	public void setCourseQuestion(Set<Question> courseQuestion) {
+		this.courseQuestion = courseQuestion;
+	}
+	
+	public Set<Video> getCourseVideo() {
+		return courseVideo;
+	}
+	public void setCourseVideo(Set<Video> courseVideo) {
+		this.courseVideo = courseVideo;
+	}
+	public Set<Chapter> getCourseChapter() {
+		return courseChapter;
+	}
+	public void setCourseChapter(Set<Chapter> courseChapter) {
+		this.courseChapter = courseChapter;
+	}
+	
+	
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getTeachOutline() {
+		return teachOutline;
+	}
+	public void setTeachOutline(String teachOutline) {
+		this.teachOutline = teachOutline;
+	}
+	public String getExperimentOutline() {
+		return experimentOutline;
+	}
+	public void setExperimentOutline(String experimentOutline) {
+		this.experimentOutline = experimentOutline;
+	}
+	public String getExamOutline() {
+		return examOutline;
+	}
+	public void setExamOutline(String examOutline) {
+		this.examOutline = examOutline;
+	}
+	public String getTeachCalendar() {
+		return teachCalendar;
+	}
+	public void setTeachCalendar(String teachCalendar) {
+		this.teachCalendar = teachCalendar;
+	}
+	public String getScore() {
+		return score;
+	}
+	public void setScore(String score) {
+		this.score = score;
+	}
+	public String getIntroductContent() {
+		return introductContent;
+	}
+	public void setIntroductContent(String introductContent) {
+		this.introductContent = introductContent;
+	}
+	public String getEditRecommend() {
+		return editRecommend;
+	}
+	public void setEditRecommend(String editRecommend) {
+		this.editRecommend = editRecommend;
+	}
+	public String getWinCondiction() {
+		return winCondiction;
+	}
+	public void setWinCondiction(String winCondiction) {
+		this.winCondiction = winCondiction;
+	}
+	
+	
+}

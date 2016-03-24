@@ -1,0 +1,167 @@
+package com.jxust.action;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
+
+import javax.annotation.Resource;
+
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
+
+import com.jxust.bean.Forum;
+import com.jxust.bean.Reply;
+import com.jxust.service.ForumService;
+import com.jxust.service.ReplyService;
+import com.jxust.util.PageToolBar;
+import com.opensymphony.xwork2.ActionContext;
+import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.ModelDriven;
+
+@Controller
+@Scope("prototype")
+public class ReplyAction extends ActionSupport{
+
+	private Reply reply;
+    private Long forumId;
+    
+    private PageToolBar toolBar;
+    public PageToolBar getToolBar() {
+		return toolBar;
+	}
+
+	public void setToolBar(PageToolBar toolBar) {
+		this.toolBar = toolBar;
+	}
+
+	public int getPageSize() {
+		return pageSize;
+	}
+
+	public void setPageSize(int pageSize) {
+		this.pageSize = pageSize;
+	}
+
+	public int getCurrentPage() {
+		return currentPage;
+	}
+
+	public void setCurrentPage(int currentPage) {
+		this.currentPage = currentPage;
+	}
+	private int pageSize = 3;
+	private int currentPage = 1;
+   
+	public Long getForumId() {
+		return forumId;
+	}
+
+	public void setForumId(Long forumId) {
+		this.forumId = forumId;
+	}
+	@Resource
+    private ReplyService replyService;
+    @Resource
+    private ForumService forumService;
+	
+
+	public Reply getReply() {
+		return reply;
+	}
+
+	public void setReply(Reply reply) {
+		this.reply = reply;
+	}
+	/**
+	 * 前台分页
+	 * @return
+	 * @throws Exception
+	 */
+	public String list()throws Exception{
+		//List replyList=replyService.findAll();
+		Forum forum=forumService.findById(forumId);
+		//Set<Reply> replyList=forum.getReplies();
+		if(reply==null){
+			reply=new Reply();
+		}
+		String hql=replyService.getHQL(reply,forumId);
+		int replyCount=replyService.getQueryCount(hql);
+		if(getToolBar()==null){
+			setToolBar(new PageToolBar(replyCount, pageSize));
+		} else {
+			getToolBar().setResultsetCount(replyCount);
+			getToolBar().setPageSize(pageSize);
+		}
+		List replyList=replyService.getListForPage(hql, toolBar
+				.getStartRow(), toolBar.getEndRow());
+		
+		ActionContext.getContext().put("forumId", forumId);
+		ActionContext.getContext().put("forum", forum);
+		ActionContext.getContext().put("replyList", replyList);
+		return"toList";
+	}
+	/**
+	 * 回帖
+	 * @return
+	 * @throws Exception
+	 */
+	public String addReply()throws Exception{
+		
+		Forum forum=forumService.findById(forumId);
+		forum.setUpdateTime(new Date());
+		forumService.update(forum);
+		reply.setUpdateTime(new Date());
+		reply.setForum(forum);
+		replyService.save(reply);
+		return"toaddReply";
+	}
+	/**
+	 * 后台回复管理
+	 * @return
+	 */
+	public String replyManage(){
+	
+		Forum forum=forumService.findById(forumId);
+		if(reply==null){
+			reply=new Reply();
+		}
+		String hql=replyService.getHQL(reply,forumId);
+		int replyCount=replyService.getQueryCount(hql);
+		if(getToolBar()==null){
+			setToolBar(new PageToolBar(replyCount, pageSize));
+		} else {
+			getToolBar().setResultsetCount(replyCount);
+			getToolBar().setPageSize(pageSize);
+		}
+		List replyList=replyService.getListForPage(hql, toolBar
+				.getStartRow(), toolBar.getEndRow());
+		
+		ActionContext.getContext().put("forumId", forumId);
+		ActionContext.getContext().put("forum", forum);
+		ActionContext.getContext().put("replyList", replyList);
+		return"toreplyManage";
+	}
+	/**
+	 * 单个删除回复
+	 * @return
+	 */
+	public String delete(){
+		replyService.delete(reply.getId());
+		ActionContext.getContext().put("forumId", forumId);
+		return"todelete";
+	}
+	/**
+	 * 批量删除
+	 * @return
+	 */
+	public String replybatchDelete(){
+		int size=replyService.getSize(forumId);
+		ActionContext.getContext().put("forumId", forumId);
+		if(size<=0){
+			return "toDeleteError";
+		}else{
+			replyService.batchDelete(forumId);
+		}
+		return "tobatchDelete";
+	}
+}

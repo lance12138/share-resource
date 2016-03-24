@@ -1,0 +1,58 @@
+package com.jxust.dao.Impl;
+
+import java.util.List;
+
+import org.hibernate.Query;
+import org.springframework.stereotype.Repository;
+
+import com.jxust.base.BaseDaoImpl;
+import com.jxust.bean.DownloadResource;
+import com.jxust.dao.DownloadResourceDao;
+@Repository
+public class DownloadResourceDaoImpl extends BaseDaoImpl<DownloadResource> implements DownloadResourceDao{
+
+	public List getByGrade(int downloadId,Long courseid) {
+		String hql="from DownloadResource where type=? and courseId=? order by uploadDate";
+		
+		Query query=getSession().createQuery(hql);
+		query.setInteger(0, downloadId);
+		query.setLong(1, courseid);
+		return query.list();
+	}
+
+	public String getQueryHQL(DownloadResource downloadResource, String select,int grade) {
+            StringBuffer sb =new StringBuffer("from DownloadResource where type="+grade+" and 1=1 ");
+		
+		if(null!=downloadResource.getInput_search() && !downloadResource.getInput_search().isEmpty())
+			 sb.append(" and "+select+" like '%"+downloadResource.getInput_search()+"%' ");
+		return sb.toString();
+	}
+
+	public int findSizeByGrade(int grade,Long id) {
+		// TODO Auto-generated method stub
+		Query query=getSession().createQuery("select count(*) from DownloadResource where type=? and courseId=?");
+		 query.setInteger(0, grade);
+		 query.setLong(1, id);
+		return Integer.parseInt(String.valueOf(query.list().get(0)));
+	}
+
+	public void batchByGrade(int grade,Long id) {
+		// TODO Auto-generated method stub
+		Query query=getSession().createQuery("delete from DownloadResource where type=? and courseId=?");
+		query.setInteger(0, grade);
+		query.setLong(1, id);
+		query.executeUpdate();
+	}
+
+	public List<DownloadResource> findByKey(String searchInput) {
+		// TODO Auto-generated method stub
+		Query query=getSession().createQuery("from DownloadResource where resourceName like ? ");
+		String temp="%"+searchInput+"%";
+		query.setString(0, temp);
+		
+		return query.list();
+	}
+
+	
+
+}

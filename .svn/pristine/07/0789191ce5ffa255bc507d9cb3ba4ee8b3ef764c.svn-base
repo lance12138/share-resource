@@ -1,0 +1,147 @@
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%@ taglib prefix="s" uri="/struts-tags"%>
+<%
+String path = request.getContextPath();
+String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+%>
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+ <base href="<%=basePath%>">
+	<meta charset="UTF-8">
+   <title>微视频</title>
+<link rel="stylesheet" type="text/css"  href="style/vediopage.css" />
+ <link href="video-js/video-js.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="js/common.js"></script>
+<script src="js/jquery-1.9.1.min.js"></script>
+ <script src="video-js/video.js"></script>
+<script>
+
+    videojs.options.flash.swf = "video-js/video-js.swf";
+    
+  </script>
+<script>
+   function switchVideo(VideoId,courseid){
+   window.location.href="courseAction_switchlittleVideo?videoId="+VideoId+"&&courseid="+courseid;
+  
+   
+   
+   }
+window.onload=function()
+{
+	var oPre_btn=document.getElementsByClassName('pre')[0];
+	var oNext_btn=document.getElementsByClassName('next')[0];
+	var oPreviewContainer=document.getElementsByClassName('preview_container')[0];
+	 
+	var aPieviewLis=oPreviewContainer.getElementsByTagName('li');
+	oPreviewContainer.style.width=aPieviewLis.length*200+'px';
+	oNext_btn.onclick=function()//视频预览菜单下一页
+	{
+		var left1=oPreviewContainer.offsetLeft;
+		var width1=aPieviewLis.length*200;
+		//var maxLength= aPieviewLis.length;
+		var maxLeft=width1-800;
+		
+		
+		if(left1!=-maxLeft&&left1%200==0)
+		{
+			left1-=200; 
+			
+			startMove(oPreviewContainer,{left:left1});
+		}
+		
+		
+		
+	}
+
+	oPre_btn.onclick=function()
+	{
+		var left1=oPreviewContainer.offsetLeft;
+		var width1=oPreviewContainer.offsetWidth;
+		if(left1!=0&&left1%200==0)
+		{
+			left1+=200;
+			
+			startMove(oPreviewContainer,{left:left1});
+		}
+	}
+}
+</script>
+</head>
+
+<body>
+<header><img id="logo" src="images/logo_grey.png" alt="logo" width="350" height="80" /></header>
+<nav id="cnav">
+	<a href="index.jsp">平台主页</a>
+   <a href="courseAction_enterCourse?courseid=${course.id}">课程简介</a>
+    <a href="teachTeamAction_addUI?courseid=${course.id}">师资队伍</a>
+    <a href="programAction_list?courseid=${course.id}">实践项目</a>
+    <a href="homeworkUploadAction_addTeacherList">作业提交</a>
+   <a href="forumAction_list">在线互动</a>
+   <a href="#">在线互动</a>
+</nav>
+<div class="content">
+	<h1>${course.name} ${first.name}</h1>
+	<div class="player">
+      <video id="example_video_1" class="video-js vjs-default-skin" controls preload="none" width="768" height="584"
+      data-setup="{}">
+    <source src="Video/${first.title}" type='video/mp4' id="resource"/>
+    
+    <track kind="captions" src="demo.captions.vtt" srclang="en" label="English"></track><!-- Tracks need an ending tag thanks to IE9 -->
+    <track kind="subtitles" src="demo.captions.vtt" srclang="en" label="English"></track><!-- Tracks need an ending tag thanks to IE9 -->
+    <p class="vjs-no-js">要浏览此视频请勿禁用javascript,或者升级您的浏览器<a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
+  </video>
+  </div>
+     <div class="prewview_surround">
+     	<div class="pre_view">
+            <div class="pre"><a href="javascript:void(0);"><img src="images/pre.png" /></a></div>
+                <div class="preview_container">
+                <s:iterator id="gz_video" value="little_videoList">
+                    <li><a  href="javascript:switchVideo(${gz_video.id},${course.id});" title="${gz_video.name}"><img src="images/vedio_preview/sample1.jpg"  width="140" height="90" /></a><a href="#">${gz_video.name}</a></li>
+                </s:iterator>   
+                </div>
+            <div class="next"><a href="javascript:void(0);"><img src="images/next.png" /></a></div>
+     	</div>
+     </div>
+     
+</div>
+<footer>
+	<div class="footer_link">
+    	<a href="javascript:void(0);" onclick="AddFavorite(window.location,document.title)">加入收藏</a><a href="backLogin.jsp">进入后台</a>
+    
+    <script>
+    	//  
+	
+		function AddFavorite(sURL, sTitle)
+		{
+		
+		    try
+		    {
+		        window.external.addFavorite(sURL, sTitle);
+		    }
+		    catch (e)
+		    {
+		        try
+		        {
+		            window.sidebar.addPanel(sTitle, sURL, "");
+		        }
+		        catch (e)
+		        {
+		            alert("加入收藏失败，请使用Ctrl+D进行添加");
+		        }
+		    }
+		}
+    
+    </script>
+    </div>
+	<p>
+    	Copyright© 2015 江西理工大学.All Rights Reserved.<br />
+  		学校地址：江西省赣州市红旗大道86号 邮编：341000<br />
+  		制作维护：  江西理工大学信息学院Delta工作室  工作群：85669528 <br />
+
+
+    </p>
+</footer>
+</body>
+</html>

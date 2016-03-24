@@ -1,0 +1,77 @@
+package com.jxust.service.serviceImpl;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.jxust.bean.Video;
+import com.jxust.dao.VideoDao;
+import com.jxust.service.VideoService;
+
+@Transactional
+@Service
+public class VideoServiceImpl implements VideoService{
+
+	@Resource
+	private VideoDao videodao;
+
+	public List findBygrade(Long grade) {
+		// TODO Auto-generated method stub
+		return videodao.findBygrade(grade);
+	}
+
+	public void save(Video video) {
+		videodao.save(video);
+		
+	}
+
+	public String getHQL(Video videos,Long cid) {
+		// TODO Auto-generated method stub
+		return videodao.getHQL(videos,cid);
+	}
+
+	public int getCountByHQL(String hql) {
+		// TODO Auto-generated method stub
+		return videodao.getCountByHQL(hql);
+	}
+
+	public void delete(Long videoId) {
+		videodao.delect(videoId);
+		
+	}
+
+	public Video getById(Long videoId) {
+		// TODO Auto-generated method stub
+		return videodao.getById(videoId);
+	}
+
+	public List<Video> findAll() {
+		// TODO Auto-generated method stub
+		return videodao.findAll();
+	}
+
+	public List getListForPage(String hql, int startRow, int endRow) {
+		// TODO Auto-generated method stub
+		return videodao.getListForPage(hql, startRow, endRow);
+	}
+
+	public int getSize(Long cid) {
+		// TODO Auto-generated method stub
+		return videodao.getSize(cid);
+	}
+
+	public void batchDelete(Long cid) {
+		// TODO Auto-generated method stub
+		videodao.batchDelete(cid);
+	}
+
+	public List<Video> getByCourse(Long courseid) {
+		// TODO Auto-generated method stub
+		return videodao.getByCourse(courseid);
+	}
+
+
+}
